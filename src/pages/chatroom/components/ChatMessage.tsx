@@ -12,10 +12,7 @@ const ChatMessage: FC<ChatMessageProps> = ({ message }) => {
         <Card>
             <CardContent>
                 <Typography>
-                    {message.user.name}
-                </Typography>
-                <Typography>
-                    {message.text}
+                    {message.user.name}: {message.text}
                 </Typography>
             </CardContent>
         </Card>
