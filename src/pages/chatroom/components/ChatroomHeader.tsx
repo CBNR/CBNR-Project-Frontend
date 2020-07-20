@@ -6,7 +6,7 @@ interface ChatroomHeaderProps {
 }
 
 const ChatroomHeader: FC<ChatroomHeaderProps> = ({ title }) => (
-    <Container>
+    <Container maxWidth="sm">
         <Typography>
             {title}
         </Typography>

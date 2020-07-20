@@ -1,6 +1,7 @@
 import { ActionTypes, SEND_MESSAGE } from "./actionTypes";
 import { createStore } from "redux";
 import Message from "../models/message";
+import User from "../models/user";
 
 export const initialState = {
     username: "",
@@ -10,7 +11,10 @@ export const initialState = {
 const reducer = (state = initialState, action: ActionTypes) => {
     switch (action.type) {
         case SEND_MESSAGE:
-            return state;
+            return {
+                ...state,
+                chatMessages: [...state.chatMessages, { id: "Temp", user: { name: "Temp" } as User, timestamp: "Temp", text: action.payload.message}],
+            };
         default:
             return state;
     }

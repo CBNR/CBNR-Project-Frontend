@@ -9,7 +9,7 @@ interface ChatroomProps {
 
 const Chatroom: FC<ChatroomProps> = () => {
     return (
-        <Container>
+        <Container maxWidth="lg" >
             <ChatroomHeader title="CBNR" />
             <Chatbox />
             <ChatroomInput />
