@@ -1,0 +1,19 @@
+/* html {
+    overflow: scroll;
+    overflow-x: hidden;
+} */
+
+.map-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+} */
+
+.selectable:hover {
+    cursor: pointer;
+}
