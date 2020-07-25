@@ -15,7 +15,7 @@ export default class Map extends React.Component<{}, {}> {
   render() {
     return (
       <div className="map-wrapper">
-        <MapInteractionCSS>
+        <MapInteractionCSS minScale={1} maxScale={2}>
           <MapSVG onClick={() => {}} />
         </MapInteractionCSS>
       </div>
