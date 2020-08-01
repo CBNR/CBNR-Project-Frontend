@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -24,17 +24,20 @@ export default function FormLogin(props: any): any {
         <Container maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
+
+                {/* Error messages */}
                 { values.errorUsernameField ? (
                 <Typography color='error'>
-                    Type in an username you jaffy!
+                    Type in an username, you jaffy!
                 </Typography>
-                ) : (!values.loginStatus && values.loginAttempt ? (
+                ) : ((!values.loginStatus) && values.loginAttempt ? (
                 <Typography color='error'>
                     Login failed
                 </Typography>
                 ) : null ) }
-                <Grid container className={classes.wrapper}>
-                    
+
+
+                <Grid container className={classes.wrapper}>    
                     <Grid item spacing={4}>
                         <IconButton 
                             aria-label="previous" 

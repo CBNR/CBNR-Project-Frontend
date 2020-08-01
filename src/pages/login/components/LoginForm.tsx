@@ -7,29 +7,28 @@ export class LoginForm extends Component {
    
     state = {
         username: '',
+        avatarId: 0,
         errorUsernameField: false,
         loginStatus: false,
         loginAttempt: false,
-        avatarId: 0,
     }
 
-    // Communicates with backend?
-    requestLogin = (username: string, password: string): boolean => {
+
+    requestLogin = (username: string, password: string) => {
+
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                id: '',
                 username: this.state.username, 
                 avatarId: this.state.avatarId.toString(),
             })
         };
         fetch('http://cbnr-project.net:3001/login', requestOptions)
             .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(() => console.log("error"))
+            .then(data => {this.setState({loginStatus: true})}) // no errors
+            .catch(() => {this.setState({loginStatus: false})}) // errors
 
-        return false;
     }
 
     // Handles changes in fields
@@ -37,6 +36,7 @@ export class LoginForm extends Component {
         this.setState({[input]: e.target.value})
     }
 
+    // Response to avatar icon selection
     handleAvatarButtons = (next: boolean) => {
         const { avatarId } = this.state;
         
@@ -54,31 +54,33 @@ export class LoginForm extends Component {
         this.setState({
             avatarId: id,
         })
-
-        console.log(this.state.avatarId)
     }
 
+    // Handles login when enter / login button is clicked on
     handleLogin = () => {
 
         const { username } = this.state;
 
+        
         if (username !== ''){
-            var status = this.requestLogin(username, '');
-            if (!status){
-                this.setState({
-                    loginStatus: status,
-                    loginAttempt: true,
-                    errorUsernameField: false,
-                }); 
-                return;
-            }
-        };
-    
-        this.setState({
-            errorUsernameField: (username === ''),
-        });
-        return; 
+            this.requestLogin(username, '');
 
+            // Unsuccessful login
+           this.setState({
+                loginAttempt: true,
+                errorUsernameField: false,
+            }); 
+            
+        }
+        // username field left blank
+        else 
+        {
+            this.setState({
+                errorUsernameField: (username === ''),
+            });
+        }
+
+        return;
     }
 
     render() {
@@ -88,10 +90,8 @@ export class LoginForm extends Component {
         return (
             <FormLogin 
                 handleChange={this.handleChange}
-                // changeMode={this.changeMode}
                 handleLogin={this.handleLogin}
                 handleAvatarButtons={this.handleAvatarButtons}
-                // handleRemember={this.handleRemember}
                 values={values}
             />
         );   
