@@ -1,58 +1,51 @@
 import React from "react";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import AppBar from "./pages/global/TopAppBar";
 import Map from "./pages/map/Map";
+import Building from "./pages/building/Building";
 import "./main.css";
-
-const drawerWidth = 300;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      height: "100vh",
       display: "flex",
+    },
+    map: {
+    },
+    building: {
       flexGrow: 1,
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-    },
-    title: {
-      flexGrow: 1,
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    drawerContainer: {
+      height: "100vh",
       overflow: "auto",
     },
-    toolbar: theme.mixins.toolbar,
+    appBarSpacer: theme.mixins.toolbar,
   })
 );
 
-export default function ClippedDrawer() {
+export default function App() {
+  const [buildId, setBuildId] = React.useState<String | undefined>(undefined);
   const classes = useStyles();
+
+  const onClick = (buildId) => {
+    setBuildId(buildId);
+  };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            CBNR
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <Map />
-      </main>
+      <AppBar />
+      {buildId === undefined ? (
+        <div className={classes.map}>
+          <div className={classes.appBarSpacer} />
+          <Map handleBuildingSelect={onClick} />
+        </div>
+      ) : (
+        <div className={classes.building}>
+          <div className={classes.appBarSpacer} />
+          <Building buildId={buildId} handleBack={onClick} />
+        </div>
+      )}
     </div>
   );
 }

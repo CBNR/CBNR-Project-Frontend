@@ -38602,6 +38602,7 @@ const MapSVG: FC<MapSVGProps> = ({ handleBuildingSelect }) => {
       <g
         className="selectable"
         onClick={() => handleBuildingSelect("Campus Centre")}
+        id="focus"
       >
         <path
           className="building"
@@ -38620,10 +38621,7 @@ const MapSVG: FC<MapSVGProps> = ({ handleBuildingSelect }) => {
           paintOrder="stroke"
         />
       </g>
-      <g
-        className="selectable"
-        onClick={() => handleBuildingSelect("Matheson Library")}
-      >
+      <g className="selectable" onClick={() => handleBuildingSelect("Matheson Library")}>
         <path
           className="building"
           fill-rule="evenodd"
@@ -38662,10 +38660,7 @@ const MapSVG: FC<MapSVGProps> = ({ handleBuildingSelect }) => {
           paintOrder="stroke"
         />
       </g>
-      <g
-        className="selectable"
-        onClick={() => handleBuildingSelect("New Horizons")}
-      >
+      <g className="selectable" onClick={() => handleBuildingSelect("New Horizons")}>
         <path
           className="building"
           fill-rule="evenodd"
@@ -38683,14 +38678,6 @@ const MapSVG: FC<MapSVGProps> = ({ handleBuildingSelect }) => {
           paintOrder="stroke"
         />
       </g>
-      <circle
-        id="focus"
-        cx="1778.99"
-        cy="2092.09"
-        r="1"
-        fill="#C4C4C4"
-        fill-opacity="0"
-      />
     </svg>
   );
 };
