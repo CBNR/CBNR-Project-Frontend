@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import MapSVG from "./MapSVG";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { MapInteractionCSS } from "react-map-interaction";
@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderBottom: "1px solid #DEE0E2",
       color: "#9C9C9C",
     },
-    listAvatar: {
-      marginRight: "10px",
+    listTitle: {
+      maxWidth: "70%",
     },
     listRight: {
       float: "right",
@@ -63,22 +63,32 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
   const classes = useStyles();
+  const [checked, setChecked] = React.useState(false);
+  const focus = useRef<SVGCircleElement>(null);
+  const rightBar = useRef<HTMLDivElement>(null);
 
-  // TODO: Fix map focus for sidebar offset
+  //TODO: Fix map focus for sidebar offset
   useEffect(() => {
-    document.getElementById("focus")!.scrollIntoView({
+    console.log("hello there")
+    focus!.current!.scrollIntoView({
       behavior: "auto",
       block: "center",
       inline: "center",
     });
-  });
+
+    window.scrollBy(rightBar!.current!.getBoundingClientRect().width / 2, 0);
+
+    if (!checked) {
+      setChecked(true);
+    }
+  }, [checked]);
 
   return (
     <React.Fragment>
-      <MapInteractionCSS minScale={1} maxScale={2}>
-        <MapSVG handleBuildingSelect={handleBuildingSelect} />
+      <MapInteractionCSS minScale={1} maxScale={2} disableZoom={true}>
+        <MapSVG handleBuildingSelect={handleBuildingSelect} focus={focus} show={checked}/>
       </MapInteractionCSS>
-      <div className={classes.rightBar} id="rightBar">
+      <div className={classes.rightBar} ref={rightBar}>
         <Typography variant="h6" className={classes.title}>
           Buildings
         </Typography>
@@ -101,7 +111,10 @@ const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
                   handleBuildingSelect(building[0]);
                 }}
               >
-                <ListItemText primary={building[0]} />
+                <ListItemText
+                  primary={building[0]}
+                  className={classes.listTitle}
+                />
                 <div className={classes.listRight}>
                   <ListItemText
                     primary={building[1]}

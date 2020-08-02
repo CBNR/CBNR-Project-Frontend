@@ -11,7 +11,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import LTB from "./ltb.jpg";
-import "./main.css";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,7 +68,7 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={2} md={2} className={classes.backBar}>
-        <Fab color="primary" aria-label="add" onClick={() => {handleBack(undefined)}}>
+        <Fab aria-label="add" onClick={() => {handleBack(undefined)}}>
           <ArrowBackIcon />
         </Fab>
       </Grid>
