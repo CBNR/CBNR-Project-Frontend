@@ -4,6 +4,11 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "./pages/global/TopAppBar";
 import Map from "./pages/map/Map";
 import Building from "./pages/building/Building";
+import Chatroom from './pages/chatroom/components/Chatroom';
+import { Provider } from 'react-redux';
+import { store } from './store/reducer';
+import { Box, ThemeProvider } from '@material-ui/core';
+import theme from './theme';
 import "./main.css";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,26 +31,29 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function App() {
   const [buildId, setBuildId] = React.useState<String | undefined>(undefined);
   const classes = useStyles();
-
   const onClick = (buildId) => {
     setBuildId(buildId);
   };
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar />
-      {buildId === undefined ? (
-        <div className={classes.map}>
-          <div className={classes.appBarSpacer} />
-          <Map handleBuildingSelect={onClick} />
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar />
+          {buildId === undefined ? (
+            <div className={classes.map}>
+              <div className={classes.appBarSpacer} />
+              <Map handleBuildingSelect={onClick} />
+            </div>
+          ) : (
+            <div className={classes.building}>
+              <div className={classes.appBarSpacer} />
+              <Building buildId={buildId} handleBack={onClick} />
+            </div>
+          )}
         </div>
-      ) : (
-        <div className={classes.building}>
-          <div className={classes.appBarSpacer} />
-          <Building buildId={buildId} handleBack={onClick} />
-        </div>
-      )}
-    </div>
+      </ThemeProvider>
+    </Provider>
   );
 }
