@@ -10,13 +10,20 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Chatroom from '../chatroom/components/Chatroom';
+import { Box } from '@material-ui/core';
 import LTB from "./ltb.jpg";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      height: "calc(100vh - " + theme.mixins.toolbar.minHeight + "px)",
-      padding: "0px",
+      height: "calc(100vh - 56px)", 
+      [theme.breakpoints.up('xs')]: { 
+        height: "calc(100vh - 48px)", 
+      }, 
+      [theme.breakpoints.up('sm')]: { 
+        height: "calc(100vh - 64px)",
+      },
     },
     title: {
       color: "#8B8B8B",
@@ -35,8 +42,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chat: {
       height: "100%",
-      padding: "1rem",
       boxShadow: "-4px 4px 8px rgba(0, 0, 0, 0.1)",
+    },
+    chatBox: {
+      height: "100%",
     },
     rightBar: {
       height: "100%",
@@ -60,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface BuildingProps {
   buildId: String | undefined;
-  handleBack: Function
+  handleBack: Function;
 }
 
 const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
@@ -68,11 +77,20 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
   return (
     <Grid container className={classes.root}>
       <Grid item xs={2} md={2} className={classes.backBar}>
-        <Fab aria-label="add" onClick={() => {handleBack(undefined)}}>
+        <Fab
+          aria-label="add"
+          onClick={() => {
+            handleBack(undefined);
+          }}
+        >
           <ArrowBackIcon />
         </Fab>
       </Grid>
-      <Grid item xs={7} md={8} className={classes.chat}></Grid>
+      <Grid item xs={7} md={8} className={classes.chat}>
+        <Box className={classes.chatBox}>
+          <Chatroom />
+        </Box>
+      </Grid>
       <Grid item xs={3} md={2} className={classes.rightBar}>
         <Typography variant="h6" className={classes.title}>
           {buildId !== undefined ? buildId : "Rotunda"}
@@ -92,11 +110,9 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
                 alignItems="center"
                 className={classes.listItem}
               >
-                <Avatar className={classes.listAvatar}>
-                  {name[0]}
-                </Avatar>
-                <ListItemText primary={name}/>
-                <MoreVertIcon/>
+                <Avatar className={classes.listAvatar}>{name[0]}</Avatar>
+                <ListItemText primary={name} />
+                <MoreVertIcon />
               </ListItem>
             </React.Fragment>
           ))}

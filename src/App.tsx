@@ -4,10 +4,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "./pages/global/TopAppBar";
 import Map from "./pages/map/Map";
 import Building from "./pages/building/Building";
-import Chatroom from './pages/chatroom/components/Chatroom';
 import { Provider } from 'react-redux';
 import { store } from './store/reducer';
-import { Box, ThemeProvider } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core';
 import theme from './theme';
 import "./main.css";
 
