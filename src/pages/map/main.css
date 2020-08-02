@@ -1,0 +1,22 @@
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.selectable:hover {
+  cursor: pointer;
+}
+
+.selectable > * {
+  background-color: #B9A99C;
+}
+
+.selectable:hover .building {
+  fill: #998d83;
+  transition: all 0.5s;
+}
