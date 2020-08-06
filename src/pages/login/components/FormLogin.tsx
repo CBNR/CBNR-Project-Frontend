@@ -49,7 +49,7 @@ export default function FormLogin(props: any): any {
                         </IconButton>
                     </Grid>
                     <Grid item spacing={4}>
-                        <Avatar alt="test" src={"/image/avatar/avatar_" + values.avatarId + ".jpg"} className={classes.avatar}></Avatar>
+                        <Avatar alt="Selected avatar" src={"/image/avatar/avatar_" + values.avatarId + ".jpg"} className={classes.avatar}></Avatar>
                     </Grid>
                     <Grid item spacing={4}>
                         <IconButton 

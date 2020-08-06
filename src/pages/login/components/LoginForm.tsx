@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import FormLogin from './FormLogin'
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { USER_LOGIN_ACTION_CREATOR } from '../../../store/actions';
 
 const AVATAR_LENGTH = 5;
 
-export class LoginForm extends Component {
+interface LoginFormProps {
+    login: (username: string, avatarId: string) => void;
+}
+
+class LoginForm extends Component<LoginFormProps> {
    
     state = {
         username: '',
@@ -14,20 +21,20 @@ export class LoginForm extends Component {
     }
 
 
-    requestLogin = (username: string, password: string) => {
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                username: this.state.username, 
-                avatarId: this.state.avatarId.toString(),
-            })
-        };
-        fetch('http://cbnr-project.net:3001/login', requestOptions)
-            .then(response => response.json())
-            .then(data => {this.setState({loginStatus: true})}) // no errors
-            .catch(() => {this.setState({loginStatus: false})}) // errors
+    requestLogin = (username: string, avatarId: string) => {
+        this.props.login(username, avatarId);
+        // const requestOptions = {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ 
+        //         username: this.state.username, 
+        //         avatarId: this.state.avatarId.toString(),
+        //     })
+        // };
+        // fetch('http://cbnr-project.net:3001/login', requestOptions)
+        //     .then(response => response.json())
+        //     .then(data => {this.setState({loginStatus: true})}) // no errors
+        //     .catch(() => {this.setState({loginStatus: false})}) // errors
 
     }
 
@@ -59,11 +66,11 @@ export class LoginForm extends Component {
     // Handles login when enter / login button is clicked on
     handleLogin = () => {
 
-        const { username } = this.state;
+        const { username, avatarId } = this.state;
 
         
         if (username !== ''){
-            this.requestLogin(username, '');
+            this.requestLogin(username, avatarId.toString());
 
             // Unsuccessful login
            this.setState({
@@ -97,4 +104,9 @@ export class LoginForm extends Component {
         );   
     }
 }
-export default LoginForm
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    login: (username: string, avatarId: string) => dispatch(USER_LOGIN_ACTION_CREATOR(username, avatarId)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginForm);

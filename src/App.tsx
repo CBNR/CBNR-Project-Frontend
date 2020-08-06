@@ -1,28 +1,69 @@
-import React from 'react';
-// import logo from './logo.svg';
-import './App.css';
-import { LoginForm } from './pages/login/components/LoginForm'
+import React, { FC } from 'react';
+import LoginForm from './pages/login/components/LoginForm'
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import AppBar from "./pages/global/TopAppBar";
+import Map from "./pages/map/Map";
+import Building from "./pages/building/Building";
+import "./main.css";
+import User from './models/user';
+import { StateDefinition } from './store/reducer';
+import { connect } from 'react-redux';
 
-function App() {
-  return (
-    <div className="App">
-      <LoginForm />
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-    </div>
-  );
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            height: "100vh",
+            display: "flex",
+        },
+        map: {},
+        building: {
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+        },
+        appBarSpacer: theme.mixins.toolbar,
+    }),
+);
+
+interface AppProps {
+    currentUser: User | undefined;
 }
 
-export default App;
+const App: FC<AppProps> = ({ currentUser }) => {
+    const [buildId, setBuildId] = React.useState<String | undefined>(undefined);
+    const classes = useStyles();
+    const onClick = (buildId) => {
+        setBuildId(buildId);
+    };
+
+    return (
+        <div className={classes.root}>
+            <CssBaseline />
+            {currentUser ? (
+                <>
+                    <AppBar />
+                    {buildId === undefined ? (
+                        <div className={classes.map}>
+                            <div className={classes.appBarSpacer} />
+                            <Map handleBuildingSelect={onClick} />
+                        </div>
+                    ) : (
+                        <div className={classes.building}>
+                            <div className={classes.appBarSpacer} />
+                            <Building buildId={buildId} handleBack={onClick} />
+                        </div>
+                    )}
+                </>
+            ) : (
+                <LoginForm />
+            )}
+        </div>
+    );
+}
+
+const mapStoreToProps = (state: StateDefinition) => ({
+    currentUser: state.currentUser,
+});
+
+export default connect(mapStoreToProps)(App);
