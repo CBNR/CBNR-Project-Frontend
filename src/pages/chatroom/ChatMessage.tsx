@@ -11,14 +11,14 @@ const ChatMessage: FC<ChatMessageProps> = ({ message }) => {
     const classes = messageStyles();
     return (
         <Paper className={classes.container}>
-            <Avatar alt="User avatar" src={"/image/avatar/avatar_" + message.user.avatarId + ".jpg"} />
+            <Avatar alt="User avatar" src={`/image/avatar/avatar_${message.user.avatarId}.jpg`} />
             <div className={classes.textContainer}>
                 <div className={classes.header}>
                     <Typography className={classes.name}>
                         {message.user.name}
                     </Typography>
                     <Typography variant="body2">
-                        {new Date().toLocaleString("en-AU")}
+                        {message.timestamp}
                     </Typography>
                 </div>
                 <Typography>

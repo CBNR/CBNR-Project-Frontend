@@ -17,7 +17,10 @@ const reducer = (state = initialState, action: ActionTypes) => {
         case SEND_MESSAGE:
             return {
                 ...state,
-                chatMessages: [...state.chatMessages, { id: "test", user: state.currentUser || {} as User, timestamp: "Temp", text: action.payload.message}],
+                chatMessages: [
+                    ...state.chatMessages,
+                    { id: `${Math.random()}`, user: state.currentUser || {} as User, timestamp: new Date().toLocaleString(), text: action.payload.message}
+                ],
             };
         case CLEAR_MESSAGES:
             return {

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import LoginForm from './pages/login/components/LoginForm'
+import LoginForm from './pages/login/LoginForm'
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "./pages/global/TopAppBar";
@@ -9,6 +9,8 @@ import "./main.css";
 import User from './models/user';
 import { StateDefinition } from './store/reducer';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { CLEAR_MESSAGES_ACTION_CREATOR } from './store/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,12 +30,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface AppProps {
     currentUser: User | undefined;
+    clearMessages: () => void;
 }
 
-const App: FC<AppProps> = ({ currentUser }) => {
+const App: FC<AppProps> = ({ currentUser, clearMessages }) => {
     const [buildId, setBuildId] = React.useState<String | undefined>(undefined);
     const classes = useStyles();
     const onClick = (buildId) => {
+        clearMessages();
         setBuildId(buildId);
     };
 
@@ -66,4 +70,8 @@ const mapStoreToProps = (state: StateDefinition) => ({
     currentUser: state.currentUser,
 });
 
-export default connect(mapStoreToProps)(App);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    clearMessages: () => dispatch(CLEAR_MESSAGES_ACTION_CREATOR()),
+});
+
+export default connect(mapStoreToProps, mapDispatchToProps)(App);

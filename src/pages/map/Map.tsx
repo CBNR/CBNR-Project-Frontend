@@ -69,7 +69,6 @@ const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
 
   //TODO: Fix map focus for sidebar offset
   useEffect(() => {
-    console.log("hello there")
     focus!.current!.scrollIntoView({
       behavior: "auto",
       block: "center",
@@ -101,10 +100,9 @@ const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
             ["Matheson Library", "0"],
             ["Hargrave-Andrew Library", "0"],
           ].map((building, index) => (
-            <React.Fragment>
+            <React.Fragment key={building[0]}>
               <ListItem
                 button
-                key={building[0]}
                 alignItems="center"
                 className={classes.listItem}
                 onClick={() => {
