@@ -1,6 +1,8 @@
 import User from "../models/user";
+import Message from "../models/message";
 
 export const SEND_MESSAGE = "SEND_MESSAGE";
+export const ADD_MESSAGE = "ADD_MESSAGE";
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
@@ -10,6 +12,13 @@ export interface SendMessageAction {
     type: typeof SEND_MESSAGE;
     payload: {
         message: string;
+    };
+}
+
+export interface AddMessageAction {
+    type: typeof ADD_MESSAGE;
+    payload: {
+        message: Message;
     };
 }
 
@@ -41,6 +50,7 @@ export interface ClearMessagesAction {
 
 export type ActionTypes = 
     SendMessageAction |
+    AddMessageAction |
     UserLoginAction |
     UserLoginSuccessAction |
     UserLoginFailureAction |

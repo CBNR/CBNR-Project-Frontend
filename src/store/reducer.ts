@@ -6,8 +6,8 @@ import createSagaMiddleware from "@redux-saga/core";
 import saga from "./sagas";
 
 export const initialState = {
-    username: "",
     chatMessages: [] as Message[],
+    userList: [] as User[],
     inProgressLogin: false,
     currentUser: undefined as User | undefined,
 };
