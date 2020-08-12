@@ -10,5 +10,5 @@ export default interface Room {
     name: string;
     type: RoomType;
     children: string[];
-    connectedusers: User[];
+    connectedUsers: User[];
 }

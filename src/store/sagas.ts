@@ -1,12 +1,14 @@
 import {
-    all, takeEvery, put
+    all, takeEvery, put, call
 } from "redux-saga/effects";
 import { USER_LOGIN, UserLoginAction } from "./actionTypes";
+import { login as loginService } from "./service";
 import { USER_LOGIN_SUCCESS_ACTION_CREATOR, USER_LOGIN_FAILURE_ACTION_CREATOR } from "./actions";
 
 function* login(action: UserLoginAction) {
     try {
-        yield put(USER_LOGIN_SUCCESS_ACTION_CREATOR({ id: "239823", name: action.payload.username, avatarId: action.payload.avatarId }));
+        const userId = yield call(loginService, action.payload.username, action.payload.avatarId);
+        yield put(USER_LOGIN_SUCCESS_ACTION_CREATOR({ id: userId, name: action.payload.username, avatarId: action.payload.avatarId }));
     } catch (error) {
         yield put(USER_LOGIN_FAILURE_ACTION_CREATOR(error.message));
     }

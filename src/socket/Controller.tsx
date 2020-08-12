@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import socket from "./socketClient";
 import { Dispatch } from "redux";
 import { ADD_MESSAGE_ACTION_CREATOR } from "../store/actions";
