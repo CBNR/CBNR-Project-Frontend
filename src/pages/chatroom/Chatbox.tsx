@@ -1,8 +1,8 @@
 import React, { FC, useRef, useEffect } from "react";
 import { Box } from "@material-ui/core";
-import Message from "../../../models/message";
+import Message from "../../models/message";
 import ChatMessage from "./ChatMessage";
-import { StateDefinition } from "../../../store/reducer";
+import { StateDefinition } from "../../store/reducer";
 import { connect } from "react-redux";
 import chatboxStyles from "./styles/chatbox";
 

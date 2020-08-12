@@ -10,7 +10,7 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Chatroom from '../chatroom/components/Chatroom';
+import Chatroom from '../chatroom/Chatroom';
 import { Box } from '@material-ui/core';
 import LTB from "./ltb.jpg";
 
