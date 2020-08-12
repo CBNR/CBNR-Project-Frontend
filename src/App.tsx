@@ -5,6 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "./pages/global/TopAppBar";
 import Map from "./pages/map/Map";
 import Building from "./pages/building/Building";
+// import Controller from "./socket/Controller";
 import "./main.css";
 import User from './models/user';
 import { StateDefinition } from './store/reducer';
@@ -46,6 +47,7 @@ const App: FC<AppProps> = ({ currentUser, clearMessages }) => {
             <CssBaseline />
             {currentUser ? (
                 <>
+                    {/* <Controller /> */}
                     <AppBar />
                     {buildId === undefined ? (
                         <div className={classes.map}>

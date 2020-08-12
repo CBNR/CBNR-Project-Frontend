@@ -23,19 +23,6 @@ class LoginForm extends Component<LoginFormProps> {
 
     requestLogin = (username: string, avatarId: string) => {
         this.props.login(username, avatarId);
-        // const requestOptions = {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ 
-        //         username: this.state.username, 
-        //         avatarId: this.state.avatarId.toString(),
-        //     })
-        // };
-        // fetch('http://cbnr-project.net:3001/login', requestOptions)
-        //     .then(response => response.json())
-        //     .then(data => {this.setState({loginStatus: true})}) // no errors
-        //     .catch(() => {this.setState({loginStatus: false})}) // errors
-
     }
 
     // Handles changes in fields
