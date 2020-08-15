@@ -1,4 +1,4 @@
-export default interface ReceievedMessage {
+export default interface MessageDTO {
     id: string;
     time: string;
     message: string;
