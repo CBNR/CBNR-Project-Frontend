@@ -127,7 +127,7 @@ export const EMIT_JOIN_ROOM_ACTION_CREATOR = (roomId: string): EmitJoinRoomActio
     type: EMIT_JOIN_ROOM,
     payload: {
         type: "join_room",
-        emitPayload: { roomId },
+        emitPayload: roomId,
     },
 });
 
@@ -143,7 +143,7 @@ export const EMIT_SEND_MESSAGE_ACTION_CREATOR = (message: string): EmitSendMessa
     type: EMIT_SEND_MESSAGE,
     payload: {
         type: "chat_msg",
-        emitPayload: { message },
+        emitPayload: message,
     },
 });
 

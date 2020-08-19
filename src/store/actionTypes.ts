@@ -111,9 +111,7 @@ export interface EmitJoinRoomAction {
     type: typeof EMIT_JOIN_ROOM;
     payload: {
         type: "join_room";
-        emitPayload: {
-            roomId: string;
-        };
+        emitPayload: string;
     };
 }
 
@@ -129,9 +127,7 @@ export interface EmitSendMessageAction {
     type: typeof EMIT_SEND_MESSAGE;
     payload: {
         type: "chat_msg";
-        emitPayload: {
-            message: string;
-        };
+        emitPayload: string;
     };
 }
 
