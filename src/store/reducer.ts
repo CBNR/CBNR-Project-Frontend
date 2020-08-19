@@ -1,4 +1,4 @@
-import { ActionTypes, USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE, CLEAR_MESSAGES, SOCKET_LEAVE_ROOM, SOCKET_JOIN_ROOM, SOCKET_ROOM_DETAILS, SOCKET_ROOM_LIST, SOCKET_RECEIVE_MESSAGE, EMIT_ROOM_DETAILS, EMIT_ROOM_LIST, EMIT_JOIN_ROOM, EMIT_LEAVE_ROOM, EMIT_SEND_MESSAGE } from "./actionTypes";
+import { ActionTypes, USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE, CLEAR_MESSAGES, SOCKET_LEAVE_ROOM, SOCKET_JOIN_ROOM, SOCKET_ROOM_DETAILS, SOCKET_ROOM_LIST, SOCKET_RECEIVE_MESSAGE, EMIT_ROOM_DETAILS, EMIT_ROOM_LIST, EMIT_JOIN_ROOM, EMIT_LEAVE_ROOM, EMIT_SEND_MESSAGE, SOCKET_USER_JOIN, SOCKET_USER_LEAVE } from "./actionTypes";
 import { createStore, applyMiddleware } from "redux";
 import Message from "../models/message";
 import User from "../models/user";
@@ -103,6 +103,16 @@ const reducer = (state = initialState, action: ActionTypes) => {
                 ? { ...state, chatMessages: [...state.chatMessages, message] }
                 : state;
         }
+        case SOCKET_USER_JOIN:
+            return {
+                ...state,
+                userList: [...state.userList, action.payload],
+            };
+        case SOCKET_USER_LEAVE:
+            return {
+                ...state,
+                userList: state.userList.filter(user => user.id !== action.payload.id),
+            };
 
         // Unsure if we need these...
         case EMIT_ROOM_DETAILS:
