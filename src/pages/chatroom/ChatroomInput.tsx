@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import { InputBase, Divider, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import { Dispatch } from "redux";
-import { SEND_MESSAGE_ACTION_CREATOR } from "../../store/actions";
+import { EMIT_SEND_MESSAGE_ACTION_CREATOR } from "../../store/actions";
 import { connect } from "react-redux";
 import inputStyles from "./styles/chatroomInput";
 
@@ -45,7 +45,7 @@ const ChatroomInput: FC<ChatroomInputProps> = ({ sendMessage }) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    sendMessage: (message: string) => dispatch(SEND_MESSAGE_ACTION_CREATOR(message)),
+    sendMessage: (message: string) => dispatch(EMIT_SEND_MESSAGE_ACTION_CREATOR(message)),
 });
 
 export default connect(null, mapDispatchToProps)(ChatroomInput);

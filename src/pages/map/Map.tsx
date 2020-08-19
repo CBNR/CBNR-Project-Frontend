@@ -9,9 +9,13 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import "./main.css";
+import { StateDefinition } from "../../store/reducer";
+import RoomListDTO from "../../models/DTO/roomListDTO";
+import { connect } from "react-redux";
 
 interface MapProps {
   handleBuildingSelect: Function;
+  roomList: RoomListDTO[];
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
+const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
   const classes = useStyles();
   const [checked, setChecked] = React.useState(false);
   const focus = useRef<SVGCircleElement>(null);
@@ -93,29 +97,23 @@ const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {[
-            ["Campus Centre", "12"],
-            ["Learning and Teaching Building", "9"],
-            ["Menzies", "10"],
-            ["Matheson Library", "0"],
-            ["Hargrave-Andrew Library", "0"],
-          ].map((building, index) => (
-            <React.Fragment key={building[0]}>
+          {roomList.map((building) => (
+            <React.Fragment key={building.id}>
               <ListItem
                 button
                 alignItems="center"
                 className={classes.listItem}
                 onClick={() => {
-                  handleBuildingSelect(building[0]);
+                  handleBuildingSelect(building.id);
                 }}
               >
                 <ListItemText
-                  primary={building[0]}
+                  primary={building.name}
                   className={classes.listTitle}
                 />
                 <div className={classes.listRight}>
                   <ListItemText
-                    primary={building[1]}
+                    primary={building.userCount}
                     className={classes.listCount}
                   />
                   <PeopleAltIcon />
@@ -129,4 +127,8 @@ const Map: FC<MapProps> = ({ handleBuildingSelect }) => {
   );
 };
 
-export default Map;
+const mapStoreToProps = (state: StateDefinition) => ({
+  roomList: state.roomList,
+});
+
+export default connect(mapStoreToProps)(Map);

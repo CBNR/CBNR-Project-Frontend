@@ -12,14 +12,16 @@ import {
     SOCKET_ROOM_LIST_ACTION_CREATOR,
     SOCKET_JOIN_ROOM_ACTION_CREATOR,
     SOCKET_LEAVE_ROOM_ACTION_CREATOR,
-    SOCKET_SEND_MESSAGE_ACTION_CREATOR,
-    SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR
+    SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR,
+    SOCKET_USER_LEAVE_ACTION_CREATOR,
+    SOCKET_USER_JOIN_ACTION_CREATOR
 } from "./actions";
 import { SERVER_URL } from "../config/config";
-import RoomDetailsDTO from "../models/DTO/roomDetailsDTO";
 import Response from "../models/response";
 import RoomListDTO from "../models/DTO/roomListDTO";
 import MessageDTO from "../models/DTO/messageDTO";
+import Room from "../models/room";
+import User from "../models/user";
 
 const connect = (): Promise<SocketIOClient.Socket> => {
     const socket = io(SERVER_URL);
@@ -32,27 +34,35 @@ const connect = (): Promise<SocketIOClient.Socket> => {
 
 const subscribe = (socket: SocketIOClient.Socket) => eventChannel(
     emit => {
-        const roomDetailsListener = (response: Response<RoomDetailsDTO>) => { emit(SOCKET_ROOM_DETAILS_ACTION_CREATOR(response.obj)) };
+        const roomDetailsListener = (response: Response<Room>) => { emit(SOCKET_ROOM_DETAILS_ACTION_CREATOR(response.obj)) };
         const roomListListener = (response: Response<RoomListDTO[]>) => { emit(SOCKET_ROOM_LIST_ACTION_CREATOR(response.obj)) };
-        const joinRoomListener = (response: Response) => { emit(SOCKET_JOIN_ROOM_ACTION_CREATOR()) };
+        const joinRoomListener = (response: Response<Room>) => { emit(SOCKET_JOIN_ROOM_ACTION_CREATOR(response.obj)) };
         const leaveRoomListener = (response: Response) => { emit(SOCKET_LEAVE_ROOM_ACTION_CREATOR()) };
-        const sendMessageListener = (response: Response) => { emit(SOCKET_SEND_MESSAGE_ACTION_CREATOR()) };
-        const receiveMessageListener = (response: Response<MessageDTO>) => { emit(SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR(response.obj)) };
+        const chatMessageListener = (response: Response<MessageDTO>) => { emit(SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR(response.obj)) };
+        const userJoinListener = (response: User) => { emit(SOCKET_USER_JOIN_ACTION_CREATOR(response)) };
+        const userLeaveListener = (response: User) => { emit(SOCKET_USER_LEAVE_ACTION_CREATOR(response)) };
 
         socket.on("room_details", roomDetailsListener);
         socket.on("room_list", roomListListener);
         socket.on("join_room", joinRoomListener);
         socket.on("leave_room", leaveRoomListener);
-        socket.on("send_msg", sendMessageListener);
-        socket.on("rcv_msg", receiveMessageListener);
+        socket.on("chat_msg", chatMessageListener);
+        socket.on("user_join", userJoinListener);
+        socket.on("user_leave", userLeaveListener);
+
+        const disconnectListener = () => {};
+
+        socket.on("disconnect", disconnectListener)
 
         return () => {
             socket.off("room_details", roomDetailsListener);
             socket.off("room_list", roomListListener);
             socket.off("join_room", joinRoomListener);
             socket.off("leave_room", leaveRoomListener);
-            socket.off("send_msg", sendMessageListener);
-            socket.off("rcv_msg", receiveMessageListener);
+            socket.off("chat_msg", chatMessageListener);
+            socket.off("user_join", userJoinListener);
+            socket.off("user_leave", userLeaveListener);
+            socket.off("disconnect", disconnectListener);
         }
     }
 );
@@ -62,6 +72,13 @@ function* read(socket) {
     while (true) {
         const action = yield take(channel);
         yield put(action);
+    }
+}
+
+function* write(socket) {
+    while (true) {
+        const { payload } = yield take(action => /^EMIT_.*$/.test(action.type));
+        socket.emit(payload.type, payload.emitPayload);
     }
 }
 
@@ -81,6 +98,7 @@ function* watchLogin() {
 
 function* readWrite(socket) {
     yield fork(read, socket);
+    yield fork(write, socket);
 }
 
 function* socketFlow() {

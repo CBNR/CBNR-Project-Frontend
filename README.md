@@ -1,5 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Config
+
+In `src/config/config.ts` there are configurable variables for the frontend as follows:
+```
+SERVER_URL: The url that requests from the front end will be sent to
+```
+It is important to configure these values before you run this project
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -3,5 +3,4 @@ export default interface MessageDTO {
     time: string;
     message: string;
     senderId: string;
-    messageId: string;
 }
