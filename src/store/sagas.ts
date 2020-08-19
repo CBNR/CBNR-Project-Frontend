@@ -34,13 +34,13 @@ const connect = (): Promise<SocketIOClient.Socket> => {
 
 const subscribe = (socket: SocketIOClient.Socket) => eventChannel(
     emit => {
-        const roomDetailsListener = (response: Response<Room>) => { emit(SOCKET_ROOM_DETAILS_ACTION_CREATOR(response.obj)) };
-        const roomListListener = (response: Response<RoomListDTO[]>) => { emit(SOCKET_ROOM_LIST_ACTION_CREATOR(response.obj)) };
-        const joinRoomListener = (response: Response<Room>) => { emit(SOCKET_JOIN_ROOM_ACTION_CREATOR(response.obj)) };
-        const leaveRoomListener = (response: Response) => { emit(SOCKET_LEAVE_ROOM_ACTION_CREATOR()) };
-        const chatMessageListener = (response: Response<MessageDTO>) => { emit(SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR(response.obj)) };
-        const userJoinListener = (response: User) => { emit(SOCKET_USER_JOIN_ACTION_CREATOR(response)) };
-        const userLeaveListener = (response: User) => { emit(SOCKET_USER_LEAVE_ACTION_CREATOR(response)) };
+        const roomDetailsListener = (response: Response<Room>) => { console.log(`Socket received: ${response}`); emit(SOCKET_ROOM_DETAILS_ACTION_CREATOR(response.obj)) };
+        const roomListListener = (response: Response<RoomListDTO[]>) => { console.log(`Socket received: ${response}`); emit(SOCKET_ROOM_LIST_ACTION_CREATOR(response.obj)) };
+        const joinRoomListener = (response: Response<Room>) => { console.log(`Socket received: ${response}`); emit(SOCKET_JOIN_ROOM_ACTION_CREATOR(response.obj)) };
+        const leaveRoomListener = (response: Response) => { console.log(`Socket received: ${response}`); emit(SOCKET_LEAVE_ROOM_ACTION_CREATOR()) };
+        const chatMessageListener = (response: Response<MessageDTO>) => { console.log(`Socket received: ${response}`); emit(SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR(response.obj)) };
+        const userJoinListener = (response: User) => { console.log(`Socket received: ${response}`); emit(SOCKET_USER_JOIN_ACTION_CREATOR(response)) };
+        const userLeaveListener = (response: User) => { console.log(`Socket received: ${response}`); emit(SOCKET_USER_LEAVE_ACTION_CREATOR(response)) };
 
         socket.on("room_details", roomDetailsListener);
         socket.on("room_list", roomListListener);
@@ -77,6 +77,7 @@ function* read(socket) {
 
 function* write(socket, action) {
     const { payload } = action;
+    console.log(`Sending emit action: ${action}`);
     yield socket.emit(payload.type, payload.emitPayload);
 }
 
