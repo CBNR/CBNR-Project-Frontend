@@ -75,11 +75,9 @@ function* read(socket) {
     }
 }
 
-function* write(socket) {
-    while (true) {
-        const { payload } = yield take(action => /^EMIT_.*$/.test(action.type));
-        socket.emit(payload.type, payload.emitPayload);
-    }
+function* write(socket, action) {
+    const { payload } = action;
+    yield socket.emit(payload.type, payload.emitPayload);
 }
 
 
@@ -96,21 +94,19 @@ function* watchLogin() {
     yield takeEvery(USER_LOGIN, login);
 }
 
-function* readWrite(socket) {
-    yield fork(read, socket);
-    yield fork(write, socket);
+function* watchWrite(socket) {
+    yield takeEvery(action => /^EMIT_.*$/.test(action.type), write, socket);
 }
 
 function* socketFlow() {
-    while (true) {
-        const socket = yield call(connect);
-        yield fork(readWrite, socket);
-    }
+    const socket = yield call(connect);
+    yield fork(read, socket)
+    yield fork(watchWrite, socket);
 }
 
 export default function* saga() {
     yield all([
-        fork(watchLogin),
-        fork(socketFlow),
+        yield fork(watchLogin),
+        yield fork(socketFlow),
     ]);
 }
