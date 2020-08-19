@@ -9,8 +9,6 @@ import "./main.css";
 import User from './models/user';
 import { StateDefinition } from './store/reducer';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import { CLEAR_MESSAGES_ACTION_CREATOR } from './store/actions';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,31 +29,26 @@ const useStyles = makeStyles((theme: Theme) =>
 interface AppProps {
     currentUser: User | undefined;
     clearMessages: () => void;
+    buildingId: string | undefined;
 }
 
-const App: FC<AppProps> = ({ currentUser, clearMessages }) => {
-    const [buildId, setBuildId] = React.useState<String | undefined>(undefined);
+const App: FC<AppProps> = ({ currentUser, clearMessages, buildingId }) => {
     const classes = useStyles();
-    const onClick = (buildId) => {
-        clearMessages();
-        setBuildId(buildId);
-    };
-
     return (
         <div className={classes.root}>
             <CssBaseline />
             {currentUser ? (
                 <>
                     <AppBar />
-                    {buildId === undefined ? (
+                    {buildingId === undefined ? (
                         <div className={classes.map}>
                             <div className={classes.appBarSpacer} />
-                            <Map handleBuildingSelect={onClick} />
+                            <Map />
                         </div>
                     ) : (
                         <div className={classes.building}>
                             <div className={classes.appBarSpacer} />
-                            <Building buildId={buildId} handleBack={onClick} />
+                            <Building buildId={buildingId} />
                         </div>
                     )}
                 </>
@@ -68,10 +61,7 @@ const App: FC<AppProps> = ({ currentUser, clearMessages }) => {
 
 const mapStoreToProps = (state: StateDefinition) => ({
     currentUser: state.currentUser,
+    buildingId: state.currentRoom ? state.currentRoom.id : undefined,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    clearMessages: () => dispatch(CLEAR_MESSAGES_ACTION_CREATOR()),
-});
-
-export default connect(mapStoreToProps, mapDispatchToProps)(App);
+export default connect(mapStoreToProps)(App);

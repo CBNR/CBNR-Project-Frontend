@@ -13,6 +13,9 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Chatroom from '../chatroom/Chatroom';
 import { Box } from '@material-ui/core';
 import LTB from "./ltb.jpg";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
+import { EMIT_LEAVE_ROOM_ACTION_CREATOR } from "../../store/actions";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface BuildingProps {
   buildId: String | undefined;
-  handleBack: Function;
+  handleBack: () => void;
 }
 
 const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
@@ -80,7 +83,7 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
         <Fab
           aria-label="add"
           onClick={() => {
-            handleBack(undefined);
+            handleBack();
           }}
         >
           <ArrowBackIcon />
@@ -122,4 +125,8 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
   );
 };
 
-export default Building;
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  handleBack: () => dispatch(EMIT_LEAVE_ROOM_ACTION_CREATOR()),
+});
+
+export default connect(null, mapDispatchToProps)(Building);
