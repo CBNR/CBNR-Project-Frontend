@@ -1,10 +1,9 @@
 import User from "../models/user";
 import Message from "../models/message";
 import RoomListDTO from "../models/DTO/roomListDTO";
-import RoomDetailsDTO from "../models/DTO/roomDetailsDTO";
 import MessageDTO from "../models/DTO/messageDTO";
+import Room from "../models/room";
 
-export const SEND_MESSAGE = "SEND_MESSAGE";
 export const ADD_MESSAGE = "ADD_MESSAGE";
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
@@ -15,15 +14,15 @@ export const SOCKET_ROOM_LIST = "SOCKET_ROOM_LIST";
 export const SOCKET_ROOM_DETAILS = "SOCKET_ROOM_DETAILS";
 export const SOCKET_JOIN_ROOM = "SOCKET_JOIN_ROOM";
 export const SOCKET_LEAVE_ROOM = "SOCKET_LEAVE_ROOM";
-export const SOCKET_SEND_MESSAGE = "SOCKET_SEND_MESSAGE";
 export const SOCKET_RECEIVE_MESSAGE = "SOCKET_RECEIVE_MESSAGE";
+export const SOCKET_USER_JOIN = "SOCKET_USER_JOIN";
+export const SOCKET_USER_LEAVE = "SOCKET_USER_LEAVE";
 
-export interface SendMessageAction {
-    type: typeof SEND_MESSAGE;
-    payload: {
-        message: string;
-    };
-}
+export const EMIT_ROOM_LIST = "EMIT_ROOM_LIST";
+export const EMIT_ROOM_DETAILS = "EMIT_ROOM_DETAILS";
+export const EMIT_JOIN_ROOM = "EMIT_JOIN_ROOM";
+export const EMIT_LEAVE_ROOM = "EMIT_LEAVE_ROOM";
+export const EMIT_SEND_MESSAGE = "EMIT_SEND_MESSAGE";
 
 export interface AddMessageAction {
     type: typeof ADD_MESSAGE;
@@ -65,19 +64,16 @@ export interface SocketRoomListAction {
 
 export interface SocketRoomDetailsAction {
     type: typeof SOCKET_ROOM_DETAILS;
-    payload: RoomDetailsDTO;
+    payload: Room;
 }
 
 export interface SocketJoinRoomAction {
     type: typeof SOCKET_JOIN_ROOM;
+    payload: Room;
 }
 
 export interface SocketLeaveRoomAction {
     type: typeof SOCKET_LEAVE_ROOM;
-}
-
-export interface SocketSendMessageAction {
-    type: typeof SOCKET_SEND_MESSAGE;
 }
 
 export interface SocketReceiveMessageAction {
@@ -85,8 +81,61 @@ export interface SocketReceiveMessageAction {
     payload: MessageDTO;
 }
 
-export type ActionTypes = 
-    SendMessageAction |
+export interface SocketUserJoinAction {
+    type: typeof SOCKET_USER_JOIN;
+    payload: User;
+}
+
+export interface SocketUserLeaveAction {
+    type: typeof SOCKET_USER_LEAVE;
+    payload: User;
+}
+
+export interface EmitRoomListAction {
+    type: typeof EMIT_ROOM_LIST;
+    payload: {
+        type: "room_list";
+        emitPayload: {};
+    };
+}
+
+export interface EmitRoomDetailsAction {
+    type: typeof EMIT_ROOM_DETAILS;
+    payload: {
+        type: "room_details";
+        emitPayload: {};
+    };
+}
+
+export interface EmitJoinRoomAction {
+    type: typeof EMIT_JOIN_ROOM;
+    payload: {
+        type: "join_room";
+        emitPayload: {
+            roomId: string;
+        };
+    };
+}
+
+export interface EmitLeaveRoomAction {
+    type: typeof EMIT_LEAVE_ROOM;
+    payload: {
+        type: "leave_room";
+        emitPayload: {};
+    };
+}
+
+export interface EmitSendMessageAction {
+    type: typeof EMIT_SEND_MESSAGE;
+    payload: {
+        type: "chat_msg";
+        emitPayload: {
+            message: string;
+        };
+    };
+}
+
+export type ActionTypes =
     AddMessageAction |
     UserLoginAction |
     UserLoginSuccessAction |
@@ -96,5 +145,11 @@ export type ActionTypes =
     SocketRoomListAction |
     SocketJoinRoomAction |
     SocketLeaveRoomAction |
-    SocketSendMessageAction |
-    SocketReceiveMessageAction;
+    SocketReceiveMessageAction |
+    SocketUserJoinAction |
+    SocketUserLeaveAction |
+    EmitJoinRoomAction |
+    EmitLeaveRoomAction |
+    EmitRoomDetailsAction |
+    EmitRoomListAction |
+    EmitSendMessageAction;
