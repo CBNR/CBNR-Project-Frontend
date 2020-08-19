@@ -9,6 +9,9 @@ import "./main.css";
 import User from './models/user';
 import { StateDefinition } from './store/reducer';
 import { connect } from 'react-redux';
+import Room from './models/room';
+import RoomListDTO from './models/DTO/roomListDTO';
+import { CircularProgress, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,15 +26,31 @@ const useStyles = makeStyles((theme: Theme) =>
             overflow: "auto",
         },
         appBarSpacer: theme.mixins.toolbar,
+        loadingContainer: {
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            width: "100vw",
+            justifyContent: "center",
+            overflow: "auto",
+        },
+        loading: {
+            alignSelf: "center",
+        },
+        loadingText: {
+            alignSelf: "center",
+            marginTop: theme.spacing(1),
+        },
     }),
 );
 
 interface AppProps {
     currentUser: User | undefined;
-    buildingId: string | undefined;
+    building: Room | undefined;
+    roomList: RoomListDTO[];
 }
 
-const App: FC<AppProps> = ({ currentUser, buildingId }) => {
+const App: FC<AppProps> = ({ currentUser, building, roomList }) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
@@ -39,16 +58,23 @@ const App: FC<AppProps> = ({ currentUser, buildingId }) => {
             {currentUser ? (
                 <>
                     <AppBar />
-                    {buildingId === undefined ? (
-                        <div className={classes.map}>
-                            <div className={classes.appBarSpacer} />
-                            <Map />
-                        </div>
+                    {roomList.length
+                    ?   (!building ? (
+                                <div className={classes.map}>
+                                    <div className={classes.appBarSpacer} />
+                                    <Map />
+                                </div>
+                            ) : (
+                                <div className={classes.building}>
+                                    <div className={classes.appBarSpacer} />
+                                    <Building building={building} />
+                                </div>
+                            )
                     ) : (
-                        <div className={classes.building}>
-                            <div className={classes.appBarSpacer} />
-                            <Building buildId={buildingId} />
-                        </div>
+                            <div className={classes.loadingContainer}>
+                                <CircularProgress className={classes.loading} />
+                                <Typography className={classes.loadingText}>Fetching Chatrooms...</Typography>
+                            </div>
                     )}
                 </>
             ) : (
@@ -60,7 +86,8 @@ const App: FC<AppProps> = ({ currentUser, buildingId }) => {
 
 const mapStoreToProps = (state: StateDefinition) => ({
     currentUser: state.currentUser,
-    buildingId: state.currentRoom ? state.currentRoom.id : undefined,
+    building: state.currentRoom,
+    roomList: state.roomList,
 });
 
 export default connect(mapStoreToProps)(App);

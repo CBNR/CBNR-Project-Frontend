@@ -5,10 +5,6 @@ import {
     USER_LOGIN_SUCCESS,
     UserLoginFailureAction,
     USER_LOGIN_FAILURE,
-    ClearMessagesAction,
-    CLEAR_MESSAGES,
-    AddMessageAction,
-    ADD_MESSAGE,
     SocketRoomDetailsAction,
     SOCKET_RECEIVE_MESSAGE,
     SOCKET_ROOM_DETAILS,
@@ -32,20 +28,14 @@ import {
     SOCKET_USER_JOIN,
     SOCKET_USER_LEAVE,
     SocketUserLeaveAction,
-    SocketUserJoinAction
+    SocketUserJoinAction,
+    SOCKET_FAILURE,
+    SocketFailureAction
 } from "./actionTypes";
 import User from "../models/user";
-import Message from "../models/message";
 import RoomListDTO from "../models/DTO/roomListDTO";
 import MessageDTO from "../models/DTO/messageDTO";
 import Room from "../models/room";
-
-export const ADD_MESSAGE_ACTION_CREATOR = (message: Message): AddMessageAction => ({
-    type: ADD_MESSAGE,
-    payload: {
-        message,
-    },
-});
 
 export const USER_LOGIN_ACTION_CREATOR = (username: string, avatarId: string): UserLoginAction => ({
     type: USER_LOGIN,
@@ -67,10 +57,6 @@ export const USER_LOGIN_FAILURE_ACTION_CREATOR = (error: string): UserLoginFailu
     payload: {
         error,
     }
-});
-
-export const CLEAR_MESSAGES_ACTION_CREATOR = (): ClearMessagesAction => ({
-    type: CLEAR_MESSAGES,
 });
 
 export const SOCKET_ROOM_DETAILS_ACTION_CREATOR = (roomDetails: Room): SocketRoomDetailsAction => ({
@@ -105,7 +91,14 @@ export const SOCKET_USER_JOIN_ACTION_CREATOR = (user: User): SocketUserJoinActio
 export const SOCKET_USER_LEAVE_ACTION_CREATOR = (user: User): SocketUserLeaveAction => ({
     type: SOCKET_USER_LEAVE,
     payload: user,
-})
+});
+
+export const SOCKET_FAILURE_ACTION_CREATOR = (message: string): SocketFailureAction => ({
+    type: SOCKET_FAILURE,
+    payload: {
+        message,
+    },
+});
 
 export const EMIT_ROOM_DETAILS_ACTION_CREATOR = (): EmitRoomDetailsAction => ({
     type: EMIT_ROOM_DETAILS,

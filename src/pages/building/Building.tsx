@@ -16,6 +16,7 @@ import LTB from "./ltb.jpg";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { EMIT_LEAVE_ROOM_ACTION_CREATOR } from "../../store/actions";
+import Room from "../../models/room";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,11 +72,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface BuildingProps {
-  buildId: String | undefined;
+  building: Room;
   handleBack: () => void;
 }
 
-const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
+const Building: FC<BuildingProps> = ({ building, handleBack }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
@@ -96,25 +97,20 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
       </Grid>
       <Grid item xs={3} md={2} className={classes.rightBar}>
         <Typography variant="h6" className={classes.title}>
-          {buildId !== undefined ? buildId : "Rotunda"}
+          {building.name}
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {[
-            "Charlie Smith",
-            "Ben Brown",
-            "Nathen Martinez",
-            "Rachel Miller",
-          ].map((name, index) => (
+          {building.connectedUsers.map((user) => (
             <React.Fragment>
               <ListItem
                 button
-                key={name}
+                key={user.id}
                 alignItems="center"
                 className={classes.listItem}
               >
-                <Avatar className={classes.listAvatar}>{name[0]}</Avatar>
-                <ListItemText primary={name} />
+                <Avatar className={classes.listAvatar} alt="User avatar" src={`/image/avatar/avatar_${user.avatarId}.jpg`}>{user.name}</Avatar>
+                <ListItemText primary={user.name} />
                 <MoreVertIcon />
               </ListItem>
             </React.Fragment>

@@ -1,4 +1,4 @@
-import { ActionTypes, USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE, CLEAR_MESSAGES, SOCKET_LEAVE_ROOM, SOCKET_JOIN_ROOM, SOCKET_ROOM_DETAILS, SOCKET_ROOM_LIST, SOCKET_RECEIVE_MESSAGE, EMIT_ROOM_DETAILS, EMIT_ROOM_LIST, EMIT_JOIN_ROOM, EMIT_LEAVE_ROOM, EMIT_SEND_MESSAGE, SOCKET_USER_JOIN, SOCKET_USER_LEAVE } from "./actionTypes";
+import { ActionTypes, USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE, SOCKET_LEAVE_ROOM, SOCKET_JOIN_ROOM, SOCKET_ROOM_DETAILS, SOCKET_ROOM_LIST, SOCKET_RECEIVE_MESSAGE, EMIT_ROOM_DETAILS, EMIT_ROOM_LIST, EMIT_JOIN_ROOM, EMIT_LEAVE_ROOM, EMIT_SEND_MESSAGE, SOCKET_USER_JOIN, SOCKET_USER_LEAVE, SOCKET_FAILURE } from "./actionTypes";
 import { createStore, applyMiddleware } from "redux";
 import Message from "../models/message";
 import User from "../models/user";
@@ -10,44 +10,14 @@ import RoomListDTO from "../models/DTO/roomListDTO";
 export const initialState = {
     chatMessages: [] as Message[],
     currentRoom: undefined as Room | undefined,
-    userList: [] as User[],
     inProgressLogin: false,
     currentUser: undefined as User | undefined,
-    roomList: [{
-        id: "TESTBLDG1",
-        name: "Campus Centre",
-        type: "BUILDING",
-        userCount: 12,
-    }, {
-        id: "TESTBLDG2",
-        name: "Menzies",
-        type: "BUILDING",
-        userCount: 10,
-    }, {
-        id: "TESTBLDG3",
-        name: "Learning and Teaching Building",
-        type: "BUILDING",
-        userCount: 0,
-    }, {
-        id: "TESTBLDG4",
-        name: "Matheson Library",
-        type: "BUILDING",
-        userCount: 23,
-    }, {
-        id: "TESTBLDG5",
-        name: "Hargrave-Andrew Library",
-        type: "BUILDING",
-        userCount: 5,
-    }] as RoomListDTO[],
+    roomList: [] as RoomListDTO[],
+    errors: [] as string[],
 };
 
 const reducer = (state = initialState, action: ActionTypes) => {
     switch (action.type) {
-        case CLEAR_MESSAGES:
-            return {
-                ...state,
-                chatMessages: [],
-            };
         case USER_LOGIN:
             return {
                 ...state,
@@ -70,20 +40,18 @@ const reducer = (state = initialState, action: ActionTypes) => {
             return {
                 ...state,
                 currentRoom: action.payload,
-                userList: action.payload.connectedUsers,
+                chatMessages: [],
             };
         case SOCKET_LEAVE_ROOM:
             return {
                 ...state,
                 currentRoom: undefined,
-                userList: [],
                 chatMessages: [],
             };
         case SOCKET_ROOM_DETAILS:
             return {
                 ...state,
                 currentRoom: action.payload,
-                userList: action.payload.connectedUsers,
             };
         case SOCKET_ROOM_LIST:
             return {
@@ -91,7 +59,11 @@ const reducer = (state = initialState, action: ActionTypes) => {
                 roomList: action.payload,
             };
         case SOCKET_RECEIVE_MESSAGE: {
-            const sendingUser = state.userList.find(user => user.id === action.payload.senderId);
+            if (!state.currentRoom || !state.currentUser) {
+                return state;
+            }
+            const sendingUser = state.currentRoom.connectedUsers.find(user => user.id === action.payload.senderId)
+                || (state.currentUser.id === action.payload.senderId && state.currentUser);
             const message: Message = {
                 id: action.payload.id,
                 timestamp: action.payload.time,
@@ -106,13 +78,24 @@ const reducer = (state = initialState, action: ActionTypes) => {
         case SOCKET_USER_JOIN:
             return {
                 ...state,
-                userList: [...state.userList, action.payload],
+                currentRoom: state.currentRoom && {
+                    ...state.currentRoom,
+                    connectedUsers: [...state.currentRoom.connectedUsers, action.payload],
+                },
             };
         case SOCKET_USER_LEAVE:
             return {
                 ...state,
-                userList: state.userList.filter(user => user.id !== action.payload.id),
+                currentRoom: state.currentRoom && {
+                    ...state.currentRoom,
+                    connectedUsers: state.currentRoom.connectedUsers.filter(user => user.id !== action.payload.id),
+                },
             };
+        case SOCKET_FAILURE:
+            return {
+                ...state,
+                errors: [...state.errors, action.payload.message]
+            }
 
         // Unsure if we need these...
         case EMIT_ROOM_DETAILS:

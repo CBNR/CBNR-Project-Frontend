@@ -3,7 +3,7 @@ import {
 } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 import io from "socket.io-client";
-import { USER_LOGIN, UserLoginAction } from "./actionTypes";
+import { USER_LOGIN, UserLoginAction, USER_LOGIN_SUCCESS } from "./actionTypes";
 import { login as loginService } from "./service";
 import {
     USER_LOGIN_SUCCESS_ACTION_CREATOR,
@@ -14,7 +14,9 @@ import {
     SOCKET_LEAVE_ROOM_ACTION_CREATOR,
     SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR,
     SOCKET_USER_LEAVE_ACTION_CREATOR,
-    SOCKET_USER_JOIN_ACTION_CREATOR
+    SOCKET_USER_JOIN_ACTION_CREATOR,
+    EMIT_ROOM_LIST_ACTION_CREATOR,
+    SOCKET_FAILURE_ACTION_CREATOR
 } from "./actions";
 import { SERVER_URL } from "../config/config";
 import Response from "../models/response";
@@ -34,13 +36,49 @@ const connect = (): Promise<SocketIOClient.Socket> => {
 
 const subscribe = (socket: SocketIOClient.Socket) => eventChannel(
     emit => {
-        const roomDetailsListener = (response: Response<Room>) => { console.log("Socket received: ", response); emit(SOCKET_ROOM_DETAILS_ACTION_CREATOR(response.obj)) };
-        const roomListListener = (response: Response<RoomListDTO[]>) => { console.log("Socket received: ", response); emit(SOCKET_ROOM_LIST_ACTION_CREATOR(response.obj)) };
-        const joinRoomListener = (response: Response<Room>) => { console.log("Socket received: ", response); emit(SOCKET_JOIN_ROOM_ACTION_CREATOR(response.obj)) };
-        const leaveRoomListener = (response: Response) => { console.log("Socket received: ", response); emit(SOCKET_LEAVE_ROOM_ACTION_CREATOR()) };
-        const chatMessageListener = (response: MessageDTO) => { console.log("Socket received: ", response); emit(SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR(response)) };
-        const userJoinListener = (response: User) => { console.log("Socket received: ", response); emit(SOCKET_USER_JOIN_ACTION_CREATOR(response)) };
-        const userLeaveListener = (response: User) => { console.log("Socket received: ", response); emit(SOCKET_USER_LEAVE_ACTION_CREATOR(response)) };
+        const roomDetailsListener = (response: Response<Room>) => {
+            if (response.success) {
+                emit(SOCKET_ROOM_DETAILS_ACTION_CREATOR(response.obj));
+            } else {
+                emit(SOCKET_FAILURE_ACTION_CREATOR(response.msg));
+            }
+        };
+        
+        const roomListListener = (response: Response<RoomListDTO[]>) => {
+            if (response.success) {
+                emit(SOCKET_ROOM_LIST_ACTION_CREATOR(response.obj));
+            } else {
+                emit(SOCKET_FAILURE_ACTION_CREATOR(response.msg));
+            }
+        };
+
+        const joinRoomListener = (response: Response<Room>) => {
+            if (response.success) {
+                emit(SOCKET_JOIN_ROOM_ACTION_CREATOR(response.obj));
+            } else {
+                emit(SOCKET_FAILURE_ACTION_CREATOR(response.msg));
+            }
+        };
+
+        const leaveRoomListener = (response: Response) => {
+            if (response.success) {
+                emit(SOCKET_LEAVE_ROOM_ACTION_CREATOR());
+            } else {
+                emit(SOCKET_FAILURE_ACTION_CREATOR(response.msg));
+            }
+        };
+
+        const chatMessageListener = (response: MessageDTO) => {
+            emit(SOCKET_RECEIVE_MESSAGE_ACTION_CREATOR(response));
+        };
+
+        const userJoinListener = (response: User) => {
+            emit(SOCKET_USER_JOIN_ACTION_CREATOR(response));
+        };
+
+        const userLeaveListener = (response: User) => {
+            emit(SOCKET_USER_LEAVE_ACTION_CREATOR(response));
+        };
 
         socket.on("room_details", roomDetailsListener);
         socket.on("room_list", roomListListener);
@@ -77,7 +115,6 @@ function* read(socket) {
 
 function* write(socket, action) {
     const { payload } = action;
-    console.log("Socket emitting: ", action);
     yield socket.emit(payload.type, payload.emitPayload);
 }
 
@@ -91,15 +128,23 @@ function* login(action: UserLoginAction) {
     }
 }
 
+function* fetchRooms() {
+    yield put(EMIT_ROOM_LIST_ACTION_CREATOR());
+}
+
 function* watchLogin() {
     yield takeEvery(USER_LOGIN, login);
+}
+
+function* watchLoginSuccess() {
+    yield takeEvery(USER_LOGIN_SUCCESS, fetchRooms);
 }
 
 function* watchWrite(socket) {
     yield takeEvery(action => /^EMIT_.*$/.test(action.type), write, socket);
 }
 
-function* socketFlow() {
+function* watchSocket() {
     const socket = yield call(connect);
     yield fork(read, socket)
     yield fork(watchWrite, socket);
@@ -108,6 +153,7 @@ function* socketFlow() {
 export default function* saga() {
     yield all([
         yield fork(watchLogin),
-        yield fork(socketFlow),
+        yield fork(watchLoginSuccess),
+        yield fork(watchSocket),
     ]);
 }

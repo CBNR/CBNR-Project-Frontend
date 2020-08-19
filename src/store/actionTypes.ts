@@ -1,14 +1,11 @@
 import User from "../models/user";
-import Message from "../models/message";
 import RoomListDTO from "../models/DTO/roomListDTO";
 import MessageDTO from "../models/DTO/messageDTO";
 import Room from "../models/room";
 
-export const ADD_MESSAGE = "ADD_MESSAGE";
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
-export const CLEAR_MESSAGES = "CLEAR_MESSAGES";
 
 export const SOCKET_ROOM_LIST = "SOCKET_ROOM_LIST";
 export const SOCKET_ROOM_DETAILS = "SOCKET_ROOM_DETAILS";
@@ -17,19 +14,13 @@ export const SOCKET_LEAVE_ROOM = "SOCKET_LEAVE_ROOM";
 export const SOCKET_RECEIVE_MESSAGE = "SOCKET_RECEIVE_MESSAGE";
 export const SOCKET_USER_JOIN = "SOCKET_USER_JOIN";
 export const SOCKET_USER_LEAVE = "SOCKET_USER_LEAVE";
+export const SOCKET_FAILURE = "SOCKET_FAILURE";
 
 export const EMIT_ROOM_LIST = "EMIT_ROOM_LIST";
 export const EMIT_ROOM_DETAILS = "EMIT_ROOM_DETAILS";
 export const EMIT_JOIN_ROOM = "EMIT_JOIN_ROOM";
 export const EMIT_LEAVE_ROOM = "EMIT_LEAVE_ROOM";
 export const EMIT_SEND_MESSAGE = "EMIT_SEND_MESSAGE";
-
-export interface AddMessageAction {
-    type: typeof ADD_MESSAGE;
-    payload: {
-        message: Message;
-    };
-}
 
 export interface UserLoginAction {
     type: typeof USER_LOGIN;
@@ -51,10 +42,6 @@ export interface UserLoginFailureAction {
     payload: {
         error: string;
     }
-}
-
-export interface ClearMessagesAction {
-    type: typeof CLEAR_MESSAGES;
 }
 
 export interface SocketRoomListAction {
@@ -89,6 +76,13 @@ export interface SocketUserJoinAction {
 export interface SocketUserLeaveAction {
     type: typeof SOCKET_USER_LEAVE;
     payload: User;
+}
+
+export interface SocketFailureAction {
+    type: typeof SOCKET_FAILURE;
+    payload: {
+        message: string;
+    };
 }
 
 export interface EmitRoomListAction {
@@ -132,11 +126,9 @@ export interface EmitSendMessageAction {
 }
 
 export type ActionTypes =
-    AddMessageAction |
     UserLoginAction |
     UserLoginSuccessAction |
     UserLoginFailureAction |
-    ClearMessagesAction |
     SocketRoomDetailsAction |
     SocketRoomListAction |
     SocketJoinRoomAction |
@@ -144,6 +136,7 @@ export type ActionTypes =
     SocketReceiveMessageAction |
     SocketUserJoinAction |
     SocketUserLeaveAction |
+    SocketFailureAction |
     EmitJoinRoomAction |
     EmitLeaveRoomAction |
     EmitRoomDetailsAction |

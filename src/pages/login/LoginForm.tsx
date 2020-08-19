@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { FC, useState } from 'react'
 import FormLogin from './FormLogin'
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -10,30 +10,22 @@ interface LoginFormProps {
     login: (username: string, avatarId: string) => void;
 }
 
-class LoginForm extends Component<LoginFormProps> {
-   
-    state = {
-        username: '',
-        avatarId: 0,
-        errorUsernameField: false,
-        loginStatus: false,
-        loginAttempt: false,
-    }
+const LoginForm: FC<LoginFormProps> = ({ login }) => {
+    const [username, setUsername] = useState<string>("");
+    const [avatarId, setAvatarId] = useState<number>(0);
+    const [loginAttempt, setLoginAttempt] = useState<boolean>(false);
 
 
-    requestLogin = (username: string, avatarId: string) => {
-        this.props.login(username, avatarId);
-    }
+    const requestLogin = (username: string, avatarId: string) => {
+        login(username, avatarId);
+    };
 
-    // Handles changes in fields
-    handleChange = (input: any) => (e: any) => {
-        this.setState({[input]: e.target.value})
-    }
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(e.target.value);
+    };
 
     // Response to avatar icon selection
-    handleAvatarButtons = (next: boolean) => {
-        const { avatarId } = this.state;
-        
+    const handleAvatarButtons = (next: boolean) => {   
         var id = avatarId + (next ? 1 : -1);
 
         if (id < 0) 
@@ -45,51 +37,27 @@ class LoginForm extends Component<LoginFormProps> {
             id = 0;
         }
 
-        this.setState({
-            avatarId: id,
-        })
+        setAvatarId(id);
     }
 
     // Handles login when enter / login button is clicked on
-    handleLogin = () => {
-
-        const { username, avatarId } = this.state;
-
-        
-        if (username !== ''){
-            this.requestLogin(username, avatarId.toString());
-
-            // Unsuccessful login
-           this.setState({
-                loginAttempt: true,
-                errorUsernameField: false,
-            }); 
-            
+    const handleLogin = () => {
+        if (username){
+            requestLogin(username, avatarId.toString());
         }
-        // username field left blank
-        else 
-        {
-            this.setState({
-                errorUsernameField: (username === ''),
-            });
-        }
+        return setLoginAttempt(true);
+    };
 
-        return;
-    }
-
-    render() {
-        const { username, loginStatus, errorUsernameField, loginAttempt, avatarId } = this.state
-        const values = { username, loginStatus, errorUsernameField, loginAttempt, avatarId }
-
-        return (
-            <FormLogin 
-                handleChange={this.handleChange}
-                handleLogin={this.handleLogin}
-                handleAvatarButtons={this.handleAvatarButtons}
-                values={values}
-            />
-        );   
-    }
+    return (
+        <FormLogin 
+            handleUsernameChange={handleUsernameChange}
+            handleLogin={handleLogin}
+            handleAvatarButtons={handleAvatarButtons}
+            username={username}
+            avatarId={avatarId}
+            loginAttempt={loginAttempt}
+        />
+    );   
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
