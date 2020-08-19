@@ -44,7 +44,7 @@ const App: FC<AppProps> = ({ currentUser, clearMessages }) => {
     return (
         <div className={classes.root}>
             <CssBaseline />
-            {!currentUser ? (
+            {currentUser ? (
                 <>
                     <AppBar />
                     {buildId === undefined ? (
