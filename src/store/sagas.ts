@@ -24,7 +24,7 @@ import Room from "../models/room";
 import User from "../models/user";
 
 const connect = (): Promise<SocketIOClient.Socket> => {
-    const socket = io(SERVER_URL);
+    const socket = io(SERVER_URL, { transports: ["websocket"] });
     return new Promise(resolve => {
         socket.on("connect", () => {
             resolve(socket);
