@@ -28,11 +28,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface AppProps {
     currentUser: User | undefined;
-    clearMessages: () => void;
     buildingId: string | undefined;
 }
 
-const App: FC<AppProps> = ({ currentUser, clearMessages, buildingId }) => {
+const App: FC<AppProps> = ({ currentUser, buildingId }) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
