@@ -77,6 +77,7 @@ const reducer = (state = initialState, action: ActionTypes) => {
                 ...state,
                 currentRoom: undefined,
                 userList: [],
+                chatMessages: [],
             };
         case SOCKET_ROOM_DETAILS:
             return {
