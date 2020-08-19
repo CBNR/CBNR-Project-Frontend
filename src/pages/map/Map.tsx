@@ -12,9 +12,11 @@ import "./main.css";
 import { StateDefinition } from "../../store/reducer";
 import RoomListDTO from "../../models/DTO/roomListDTO";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { EMIT_JOIN_ROOM_ACTION_CREATOR } from "../../store/actions";
 
 interface MapProps {
-  handleBuildingSelect: Function;
+  handleBuildingSelect: (buildingId: string) => void;
   roomList: RoomListDTO[];
 }
 
@@ -131,4 +133,8 @@ const mapStoreToProps = (state: StateDefinition) => ({
   roomList: state.roomList,
 });
 
-export default connect(mapStoreToProps)(Map);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  handleBuildingSelect: (buildingId: string) => dispatch(EMIT_JOIN_ROOM_ACTION_CREATOR(buildingId)),
+});
+
+export default connect(mapStoreToProps, mapDispatchToProps)(Map);

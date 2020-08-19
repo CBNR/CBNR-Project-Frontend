@@ -14,27 +14,27 @@ export const initialState = {
     inProgressLogin: false,
     currentUser: undefined as User | undefined,
     roomList: [{
-        id: "Campus Centre",
+        id: "TESTBLDG1",
         name: "Campus Centre",
         type: "BUILDING",
         userCount: 12,
     }, {
-        id: "Menzies",
+        id: "TESTBLDG2",
         name: "Menzies",
         type: "BUILDING",
         userCount: 10,
     }, {
-        id: "Learning and Teaching Building",
+        id: "TESTBLDG3",
         name: "Learning and Teaching Building",
         type: "BUILDING",
         userCount: 0,
     }, {
-        id: "Matheson Library",
+        id: "TESTBLDG4",
         name: "Matheson Library",
         type: "BUILDING",
         userCount: 23,
     }, {
-        id: "Hargrave-Andrew Library",
+        id: "TESTBLDG5",
         name: "Hargrave-Andrew Library",
         type: "BUILDING",
         userCount: 5,
