@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,36 +7,40 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container'; 
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { ArrowLeft, ArrowRight } from '@material-ui/icons/'
-// import {
-//     FacebookLoginButton,
-//     GoogleLoginButton,
-//   } from "react-social-login-buttons";
-import { useStyles } from './styles/login'
-// import { Grid } from '@material-ui/core';
+import { ArrowLeft, ArrowRight } from '@material-ui/icons/';
+import { useStyles } from './styles/login';
+import { StateDefinition } from '../../store/reducer';
+import { connect } from 'react-redux';
 
-export default function FormLogin(props: any): any {
+interface FormLoginProps {
+    handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleLogin: () => void;
+    handleAvatarButtons: (next: boolean) => void;
+    inProgressLogin: boolean;
+    username: string;
+    avatarId: number;
+    loginAttempt: boolean;
+}
+
+const FormLogin: FC<FormLoginProps> = ({
+    handleUsernameChange,
+    handleLogin,
+    handleAvatarButtons,
+    inProgressLogin,
+    username,
+    avatarId,
+    loginAttempt,
+}) => {
     const classes = useStyles();
-
-    const { handleChange, handleLogin, handleAvatarButtons, values } = props
-
     return (
         <Container maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
-
-                {/* Error messages */}
-                { values.errorUsernameField ? (
-                <Typography color='error'>
-                    Type in an username, you jaffy!
-                </Typography>
-                ) : ((!values.loginStatus) && values.loginAttempt ? (
-                <Typography color='error'>
-                    Login failed
-                </Typography>
-                ) : null ) }
-
-
+                {loginAttempt && !inProgressLogin && (
+                    <Typography color='error'>
+                        Login failed
+                    </Typography>
+                )}
                 <Grid container spacing={4} className={classes.wrapper}>    
                     <Grid item>
                         <IconButton 
@@ -44,12 +48,13 @@ export default function FormLogin(props: any): any {
                             className={classes.arrowButtons}
                             disableRipple={true}
                             onClick={() => handleAvatarButtons(false)}
+                            disabled={inProgressLogin}
                         >
                             <ArrowLeft className={classes.arrow}/>
                         </IconButton>
                     </Grid>
                     <Grid item>
-                        <Avatar alt="Selected avatar" src={"/image/avatar/avatar_" + values.avatarId + ".jpg"} className={classes.avatar}></Avatar>
+                        <Avatar alt="Selected avatar" src={"/image/avatar/avatar_" + avatarId + ".jpg"} className={classes.avatar}></Avatar>
                     </Grid>
                     <Grid item>
                         <IconButton 
@@ -57,6 +62,7 @@ export default function FormLogin(props: any): any {
                             className={classes.arrowButtons}
                             disableRipple={true}
                             onClick={() => handleAvatarButtons(true)}
+                            disabled={inProgressLogin}
                         >
                             <ArrowRight className={classes.arrow}/>
                         </IconButton>
@@ -74,19 +80,22 @@ export default function FormLogin(props: any): any {
                     id="username"
                     label="Username"
                     autoFocus
-                    onChange={handleChange('username')}
+                    error={loginAttempt && !username}
+                    helperText={(loginAttempt && !username) ? "Type in an username, you jaffy!" : ""}
+                    onChange={handleUsernameChange}
+                    disabled={inProgressLogin}
                     onKeyPress={(e) => e.key==='Enter' ? handleLogin() : null}
                 >
                 </TextField>
                 
                 <Button
-                // type="submit"
                 size="large"
                 fullWidth
                 variant="contained"
                 color="primary"
                 className={classes.submit}
                 onClick={handleLogin}
+                disabled={inProgressLogin || (loginAttempt && !username)}
                 >
                     Login
                 </Button>
@@ -95,4 +104,8 @@ export default function FormLogin(props: any): any {
     );
 }
 
-// export default FormLogin
+const mapStoreToProps = (state: StateDefinition) => ({
+    inProgressLogin: state.inProgressLogin,
+});
+
+export default connect(mapStoreToProps)(FormLogin);

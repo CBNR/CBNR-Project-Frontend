@@ -16,6 +16,9 @@ import LTB from "./ltb.jpg";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { EMIT_LEAVE_ROOM_ACTION_CREATOR } from "../../store/actions";
+import Room from "../../models/room";
+import { StateDefinition } from "../../store/reducer";
+import User from "../../models/user";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,11 +74,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface BuildingProps {
-  buildId: String | undefined;
+  currentUser: User | undefined;
+  building: Room;
   handleBack: () => void;
 }
 
-const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
+const Building: FC<BuildingProps> = ({ currentUser, building, handleBack }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
@@ -96,25 +100,20 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
       </Grid>
       <Grid item xs={3} md={2} className={classes.rightBar}>
         <Typography variant="h6" className={classes.title}>
-          {buildId !== undefined ? buildId : "Rotunda"}
+          {building.name}
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {[
-            "Charlie Smith",
-            "Ben Brown",
-            "Nathen Martinez",
-            "Rachel Miller",
-          ].map((name, index) => (
+          {currentUser && [currentUser, ...building.connectedUsers].map((user) => (
             <React.Fragment>
               <ListItem
                 button
-                key={name}
+                key={user.id}
                 alignItems="center"
                 className={classes.listItem}
               >
-                <Avatar className={classes.listAvatar}>{name[0]}</Avatar>
-                <ListItemText primary={name} />
+                <Avatar className={classes.listAvatar} alt="User avatar" src={`/image/avatar/avatar_${user.avatarId}.jpg`}>{user.name}</Avatar>
+                <ListItemText primary={user.name} />
                 <MoreVertIcon />
               </ListItem>
             </React.Fragment>
@@ -125,8 +124,12 @@ const Building: FC<BuildingProps> = ({ buildId, handleBack }) => {
   );
 };
 
+const mapStoreToProps = (state: StateDefinition) => ({
+  currentUser: state.currentUser,
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   handleBack: () => dispatch(EMIT_LEAVE_ROOM_ACTION_CREATOR()),
 });
 
-export default connect(null, mapDispatchToProps)(Building);
+export default connect(mapStoreToProps, mapDispatchToProps)(Building);

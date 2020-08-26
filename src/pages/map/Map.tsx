@@ -14,6 +14,7 @@ import RoomListDTO from "../../models/DTO/roomListDTO";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { EMIT_JOIN_ROOM_ACTION_CREATOR } from "../../store/actions";
+import { CircularProgress } from "@material-ui/core";
 
 interface MapProps {
   handleBuildingSelect: (buildingId: string) => void;
@@ -99,30 +100,33 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {roomList.map((building) => (
-            <React.Fragment key={building.id}>
-              <ListItem
-                button
-                alignItems="center"
-                className={classes.listItem}
-                onClick={() => {
-                  handleBuildingSelect(building.id);
-                }}
-              >
-                <ListItemText
-                  primary={building.name}
-                  className={classes.listTitle}
-                />
-                <div className={classes.listRight}>
-                  <ListItemText
-                    primary={building.userCount}
-                    className={classes.listCount}
-                  />
-                  <PeopleAltIcon />
-                </div>
-              </ListItem>
-            </React.Fragment>
-          ))}
+          {roomList.length
+            ? roomList.map((building) => (
+                <React.Fragment key={building.id}>
+                  <ListItem
+                    button
+                    alignItems="center"
+                    className={classes.listItem}
+                    onClick={() => {
+                      handleBuildingSelect(building.id);
+                    }}
+                  >
+                    <ListItemText
+                      primary={building.name}
+                      className={classes.listTitle}
+                    />
+                    <div className={classes.listRight}>
+                      <ListItemText
+                        primary={building.userCount}
+                        className={classes.listCount}
+                      />
+                      <PeopleAltIcon />
+                    </div>
+                  </ListItem>
+                </React.Fragment>
+              ))
+            : <CircularProgress />
+          }
         </List>
       </div>
     </React.Fragment>
