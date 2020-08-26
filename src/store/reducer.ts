@@ -63,7 +63,7 @@ const reducer = (state = initialState, action: ActionTypes) => {
                 return state;
             }
             const sendingUser = state.currentRoom.connectedUsers.find(user => user.id === action.payload.senderId)
-                || (state.currentUser.id === action.payload.senderId && state.currentUser);
+                || (state.currentUser.id === action.payload.senderId ? state.currentUser : undefined);
             const message: Message = {
                 id: action.payload.id,
                 timestamp: action.payload.time,

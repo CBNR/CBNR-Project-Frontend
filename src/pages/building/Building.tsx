@@ -17,6 +17,8 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { EMIT_LEAVE_ROOM_ACTION_CREATOR } from "../../store/actions";
 import Room from "../../models/room";
+import { StateDefinition } from "../../store/reducer";
+import User from "../../models/user";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -72,11 +74,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface BuildingProps {
+  currentUser: User | undefined;
   building: Room;
   handleBack: () => void;
 }
 
-const Building: FC<BuildingProps> = ({ building, handleBack }) => {
+const Building: FC<BuildingProps> = ({ currentUser, building, handleBack }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
@@ -101,7 +104,7 @@ const Building: FC<BuildingProps> = ({ building, handleBack }) => {
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {building.connectedUsers.map((user) => (
+          {currentUser && [currentUser, ...building.connectedUsers].map((user) => (
             <React.Fragment>
               <ListItem
                 button
@@ -121,8 +124,12 @@ const Building: FC<BuildingProps> = ({ building, handleBack }) => {
   );
 };
 
+const mapStoreToProps = (state: StateDefinition) => ({
+  currentUser: state.currentUser,
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   handleBack: () => dispatch(EMIT_LEAVE_ROOM_ACTION_CREATOR()),
 });
 
-export default connect(null, mapDispatchToProps)(Building);
+export default connect(mapStoreToProps, mapDispatchToProps)(Building);

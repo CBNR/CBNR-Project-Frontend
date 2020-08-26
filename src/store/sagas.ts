@@ -128,8 +128,17 @@ function* login(action: UserLoginAction) {
     }
 }
 
-function* fetchRooms() {
+function* watchSocket() {
+    const socket = yield call(connect);
+    yield fork(read, socket)
+    yield fork(watchWrite, socket);
     yield put(EMIT_ROOM_LIST_ACTION_CREATOR());
+}
+
+function* onLogin() {
+    yield all([
+        yield fork(watchSocket),
+    ]);
 }
 
 function* watchLogin() {
@@ -137,23 +146,16 @@ function* watchLogin() {
 }
 
 function* watchLoginSuccess() {
-    yield takeEvery(USER_LOGIN_SUCCESS, fetchRooms);
+    yield takeEvery(USER_LOGIN_SUCCESS, onLogin);
 }
 
 function* watchWrite(socket) {
     yield takeEvery(action => /^EMIT_.*$/.test(action.type), write, socket);
 }
 
-function* watchSocket() {
-    const socket = yield call(connect);
-    yield fork(read, socket)
-    yield fork(watchWrite, socket);
-}
-
 export default function* saga() {
     yield all([
         yield fork(watchLogin),
         yield fork(watchLoginSuccess),
-        yield fork(watchSocket),
     ]);
 }
