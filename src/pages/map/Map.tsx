@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
   const classes = useStyles();
   const [checked, setChecked] = React.useState(false);
-  const focus = useRef<SVGCircleElement>(null);
+  const focus = useRef<SVGPathElement>(null);
   const rightBar = useRef<HTMLDivElement>(null);
 
   //TODO: Fix map focus for sidebar offset
@@ -82,7 +82,7 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
       inline: "center",
     });
 
-    window.scrollBy(rightBar!.current!.getBoundingClientRect().width / 2, 0);
+    window.scrollBy(rightBar!.current!.getBoundingClientRect().width/2, 0);
 
     if (!checked) {
       setChecked(true);
@@ -91,8 +91,17 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
 
   return (
     <React.Fragment>
-      <MapInteractionCSS minScale={2} maxScale={3} disableZoom={true}>
-        <MapSVG handleBuildingSelect={handleBuildingSelect} focus={focus} show={checked}/>
+      <MapInteractionCSS
+        defaultValue={{
+          scale: 1.25,
+          translation: {x: 0, y: 0}
+        }}
+      >
+        <MapSVG
+          handleBuildingSelect={handleBuildingSelect}
+          focus={focus}
+          show={checked}
+        />
       </MapInteractionCSS>
       <div className={classes.rightBar} ref={rightBar}>
         <Typography variant="h6" className={classes.title}>
@@ -100,33 +109,34 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {roomList.length
-            ? roomList.map((building) => (
-                <React.Fragment key={building.id}>
-                  <ListItem
-                    button
-                    alignItems="center"
-                    className={classes.listItem}
-                    onClick={() => {
-                      handleBuildingSelect(building.id);
-                    }}
-                  >
+          {roomList.length ? (
+            roomList.map((building) => (
+              <React.Fragment key={building.id}>
+                <ListItem
+                  button
+                  alignItems="center"
+                  className={classes.listItem}
+                  onClick={() => {
+                    handleBuildingSelect(building.id);
+                  }}
+                >
+                  <ListItemText
+                    primary={building.name}
+                    className={classes.listTitle}
+                  />
+                  <div className={classes.listRight}>
                     <ListItemText
-                      primary={building.name}
-                      className={classes.listTitle}
+                      primary={building.userCount}
+                      className={classes.listCount}
                     />
-                    <div className={classes.listRight}>
-                      <ListItemText
-                        primary={building.userCount}
-                        className={classes.listCount}
-                      />
-                      <PeopleAltIcon />
-                    </div>
-                  </ListItem>
-                </React.Fragment>
-              ))
-            : <CircularProgress />
-          }
+                    <PeopleAltIcon />
+                  </div>
+                </ListItem>
+              </React.Fragment>
+            ))
+          ) : (
+            <CircularProgress />
+          )}
         </List>
       </div>
     </React.Fragment>
@@ -138,7 +148,8 @@ const mapStoreToProps = (state: StateDefinition) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  handleBuildingSelect: (buildingId: string) => dispatch(EMIT_JOIN_ROOM_ACTION_CREATOR(buildingId)),
+  handleBuildingSelect: (buildingId: string) =>
+    dispatch(EMIT_JOIN_ROOM_ACTION_CREATOR(buildingId)),
 });
 
 export default connect(mapStoreToProps, mapDispatchToProps)(Map);
