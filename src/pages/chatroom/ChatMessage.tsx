@@ -10,8 +10,8 @@ interface ChatMessageProps {
 const ChatMessage: FC<ChatMessageProps> = ({ message }) => {
     const classes = messageStyles();
     return (
-        <Paper className={classes.container}>
-            <Avatar alt="User avatar" src={`/image/avatar/avatar_${message.user.avatarId}.jpg`} />
+        <Paper className={classes.container} square>
+            <Avatar>{message.user.name[0]}</Avatar>
             <div className={classes.textContainer}>
                 <div className={classes.header}>
                     <Typography className={classes.name}>

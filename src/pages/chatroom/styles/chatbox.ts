@@ -5,6 +5,12 @@ const chatboxStyles = makeStyles((theme: Theme) => ({
         flexGrow: 99,
         overflowY: "scroll",
         overflowX: "hidden",
+        backgroundColor: "#F9F9FB",
+        display: "flex",
+        flexDirection: "column",
+    },
+    messageTop: {
+        marginTop: "auto",
     },
 }));
 

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { InputBase, Divider, IconButton } from "@material-ui/core";
+import { InputBase, IconButton } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 import { Dispatch } from "redux";
 import { EMIT_SEND_MESSAGE_ACTION_CREATOR } from "../../store/actions";
@@ -27,7 +27,6 @@ const ChatroomInput: FC<ChatroomInputProps> = ({ sendMessage }) => {
 
     return (
         <>
-            <Divider  orientation="horizontal" />
             <div className={classes.container}>
                 <InputBase
                     value={text}
@@ -36,8 +35,8 @@ const ChatroomInput: FC<ChatroomInputProps> = ({ sendMessage }) => {
                     onChange={onChange}
                     className={classes.input}
                 />
-                <IconButton onClick={onSubmit} color="primary" className={classes.button}>
-                    <SendIcon />
+                <IconButton onClick={onSubmit} className={classes.button}>
+                    <SendIcon fontSize="small"/>
                 </IconButton>
             </div>
         </>

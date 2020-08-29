@@ -5,7 +5,6 @@ const chatroomStyles = makeStyles((theme: Theme) => ({
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        border: "1px solid black",
         borderRadius: theme.shape.borderRadius,
         padding: theme.spacing(0),
     },

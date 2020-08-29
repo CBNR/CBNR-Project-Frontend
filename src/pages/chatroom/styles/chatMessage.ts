@@ -5,7 +5,10 @@ const messageStyles = makeStyles((theme: Theme) => ({
         display: "flex",
         flexDirection: "row",
         padding: theme.spacing(1),
+        paddingLeft: theme.spacing(2),
         overflowWrap: "anywhere",
+        width: "100%",
+        backgroundColor: "#F9F9FB",
     },
     name: {
         fontWeight: "bold",
