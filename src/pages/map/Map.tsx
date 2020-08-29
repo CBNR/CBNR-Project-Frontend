@@ -91,7 +91,7 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
 
   return (
     <React.Fragment>
-      <MapInteractionCSS minScale={1} maxScale={2} disableZoom={true}>
+      <MapInteractionCSS minScale={2} maxScale={3} disableZoom={true}>
         <MapSVG handleBuildingSelect={handleBuildingSelect} focus={focus} show={checked}/>
       </MapInteractionCSS>
       <div className={classes.rightBar} ref={rightBar}>

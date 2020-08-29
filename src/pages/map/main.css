@@ -20,3 +20,13 @@ html {
   fill: #998d83;
   transition: all 0.5s;
 }
+
+.selectable {
+  transform-origin: left;
+  transform-box:fill-box;
+  animation: charge 0.2s ease infinite;
+}
+
+.selectable:hover{
+  transform: scale(1.02);
+}

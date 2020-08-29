@@ -9,7 +9,6 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Chatroom from '../chatroom/Chatroom';
 import { Box } from '@material-ui/core';
 import LTB from "./ltb.jpg";
@@ -114,7 +113,6 @@ const Building: FC<BuildingProps> = ({ currentUser, building, handleBack }) => {
               >
                 <Avatar className={classes.listAvatar} alt="User avatar" src={`/image/avatar/avatar_${user.avatarId}.jpg`}>{user.name}</Avatar>
                 <ListItemText primary={user.name} />
-                <MoreVertIcon />
               </ListItem>
             </React.Fragment>
           ))}
