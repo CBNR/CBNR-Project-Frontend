@@ -5,7 +5,6 @@ import ChatMessage from "./ChatMessage";
 import { StateDefinition } from "../../store/reducer";
 import { connect } from "react-redux";
 import chatboxStyles from "./styles/chatbox";
-import messageStyles from "./styles/chatMessage";
 
 interface ChatboxProperties {
     chatMessages: Message[],
@@ -24,7 +23,7 @@ const Chatbox: FC<ChatboxProperties> = ({ chatMessages }) => {
     return (
         <Box className={classes.chatbox} alignItems="flex-end">
             <div className={classes.messageTop} />
-            {chatMessages.map(m => <ChatMessage key={m.id} message={m} />)}
+                {chatMessages.map(m => <ChatMessage key={m.id} message={m} />)}
             <div ref={endOfMessagesRef} />
         </Box>
     );

@@ -9,16 +9,25 @@ interface ChatMessageProps {
 
 const ChatMessage: FC<ChatMessageProps> = ({ message }) => {
     const classes = messageStyles();
+    
+    const getTime = (timestamp: string) => {
+        const date = new Date(timestamp);
+        return `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`;
+    }
+
     return (
         <Paper className={classes.container} square>
-            <Avatar>{message.user.name[0]}</Avatar>
+            <Avatar
+                alt="User avatar"
+                src={`/image/avatar/avatar_${message.user.avatarId}.jpg`}
+            />
             <div className={classes.textContainer}>
                 <div className={classes.header}>
                     <Typography className={classes.name}>
                         {message.user.name}
                     </Typography>
                     <Typography variant="body2">
-                        {message.timestamp}
+                        {getTime(message.timestamp)}
                     </Typography>
                 </div>
                 <Typography>

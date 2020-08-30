@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 import { Avatar } from "@material-ui/core";
 import User from "../../models/user";
 import logo from "./logo.svg";
-import { IconButton } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,7 +51,7 @@ const TopAppBar: FC<TopAppBarProps> = ({ user }) => {
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
-        <img src={logo} className={classes.logo} />
+        <img alt="CBNR" src={logo} className={classes.logo} />
         {user && (
           <>
             <Avatar

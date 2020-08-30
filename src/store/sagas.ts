@@ -116,6 +116,10 @@ function* read(socket) {
 function* write(socket, action) {
     const { payload } = action;
     yield socket.emit(payload.type, payload.emitPayload);
+    if (action.type === "EMIT_ROOM_LEAVE") {
+        const roomList = EMIT_ROOM_LIST_ACTION_CREATOR();
+        yield socket.emit(roomList.payload.type, roomList.payload.emitPayload);
+    }
 }
 
 
