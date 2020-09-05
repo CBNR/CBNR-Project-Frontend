@@ -7,14 +7,13 @@ import chatroomStyles from "./styles/chatroom";
 interface ChatroomProps {}
 
 const Chatroom: FC<ChatroomProps> = () => {
-    const classes = chatroomStyles();
-    return (
-        <Container maxWidth="lg" className={classes.container}>
-            <Chatbox />
-            <ChatroomInput />
-        </Container>
-    );
-}
+  const classes = chatroomStyles();
+  return (
+    <Container maxWidth="lg" className={classes.container}>
+      <Chatbox />
+      <ChatroomInput />
+    </Container>
+  );
+};
 
-
-export default Chatroom
+export default Chatroom;

@@ -7,7 +7,7 @@ const inputStyles = makeStyles((theme: Theme) => ({
         maxWidth: "100%",
         minHeight: "50px",
         backgroundColor: "#EFF0F3",
-        margin: theme.spacing(2),
+        margin: theme.spacing(1),
         borderRadius: "8px",
     },
     input: {

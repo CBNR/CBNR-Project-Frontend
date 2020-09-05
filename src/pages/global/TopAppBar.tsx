@@ -23,8 +23,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logo: {
       marginRight: "auto",
-      maxWidth: "8%",
-      maxHeight: "8%",
+      width: "8%",
+      height: "8%",
+      minWidth: "125px",
     },
     button: {
       fontSize: "1.05rem",

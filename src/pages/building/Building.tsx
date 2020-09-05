@@ -9,8 +9,8 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Chatroom from '../chatroom/Chatroom';
-import { Box } from '@material-ui/core';
+import Chatroom from "../chatroom/Chatroom";
+import { Box } from "@material-ui/core";
 import LTB from "./ltb.jpg";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
@@ -22,11 +22,11 @@ import User from "../../models/user";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      height: "calc(100vh - 56px)", 
-      [theme.breakpoints.up('xs')]: { 
-        height: "calc(100vh - 48px)", 
-      }, 
-      [theme.breakpoints.up('sm')]: { 
+      height: "calc(100vh - 56px)",
+      [theme.breakpoints.up("xs")]: {
+        height: "calc(100vh - 48px)",
+      },
+      [theme.breakpoints.up("sm")]: {
         height: "calc(100vh - 64px)",
       },
     },
@@ -44,10 +44,15 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundRepeat: "no-repeat",
       backgroundAttachment: "fixed",
       backgroundPosition: "left bottom",
+
+      [theme.breakpoints.down("sm")]: {
+        display: "none",
+      },
     },
     chat: {
       height: "100%",
       boxShadow: "-4px 4px 8px rgba(0, 0, 0, 0.1)",
+      position: "relative",
     },
     chatBox: {
       height: "100%",
@@ -57,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: "1rem",
       backgroundColor: "#F9FCFF",
       boxShadow: "-4px 4px 8px rgba(0, 0, 0, 0.1)",
+      zIndex: 999,
     },
     list: {
       paddingTop: "0px",
@@ -69,6 +75,20 @@ const useStyles = makeStyles((theme: Theme) =>
     listAvatar: {
       marginRight: "10px",
     },
+    back: {
+      display: "none",
+      [theme.breakpoints.down("sm")]: {
+        display: "block",
+      },
+      position: "absolute",
+      top: "1rem",
+      left: "1rem",
+      backgroundColor: "#7986CB"
+    },
+    backIcon: {
+      color: "#F9F9FB",
+      verticalAlign: "middle",
+    }
   })
 );
 
@@ -82,7 +102,7 @@ const Building: FC<BuildingProps> = ({ currentUser, building, handleBack }) => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
-      <Grid item xs={2} md={2} className={classes.backBar}>
+      <Grid item md={2} className={classes.backBar + ` ${building.id}`}>
         <Fab
           aria-label="add"
           onClick={() => {
@@ -92,7 +112,12 @@ const Building: FC<BuildingProps> = ({ currentUser, building, handleBack }) => {
           <ArrowBackIcon />
         </Fab>
       </Grid>
-      <Grid item xs={7} md={8} className={classes.chat}>
+      <Grid item xs={9} md={8} className={classes.chat}>
+        <Fab className={classes.back} aria-label="add"onClick={() => {
+            handleBack();
+          }}>
+          <ArrowBackIcon className={classes.backIcon}/>
+        </Fab>
         <Box className={classes.chatBox}>
           <Chatroom />
         </Box>
@@ -103,19 +128,26 @@ const Building: FC<BuildingProps> = ({ currentUser, building, handleBack }) => {
         </Typography>
         <Divider />
         <List className={classes.list}>
-          {currentUser && [currentUser, ...building.connectedUsers].map((user) => (
-            <React.Fragment>
-              <ListItem
-                button
-                key={user.id}
-                alignItems="center"
-                className={classes.listItem}
-              >
-                <Avatar className={classes.listAvatar} alt="User avatar" src={`/image/avatar/avatar_${user.avatarId}.jpg`}>{user.name}</Avatar>
-                <ListItemText primary={user.name} />
-              </ListItem>
-            </React.Fragment>
-          ))}
+          {currentUser &&
+            [currentUser, ...building.connectedUsers].map((user) => (
+              <React.Fragment>
+                <ListItem
+                  button
+                  key={user.id}
+                  alignItems="center"
+                  className={classes.listItem}
+                >
+                  <Avatar
+                    className={classes.listAvatar}
+                    alt="User avatar"
+                    src={`/image/avatar/avatar_${user.avatarId}.jpg`}
+                  >
+                    {user.name}
+                  </Avatar>
+                  <ListItemText primary={user.name} />
+                </ListItem>
+              </React.Fragment>
+            ))}
         </List>
       </Grid>
     </Grid>

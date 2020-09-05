@@ -8,9 +8,11 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import Grid from '@material-ui/core/Grid';
 import "./main.css";
 import { StateDefinition } from "../../store/reducer";
 import RoomListDTO from "../../models/DTO/roomListDTO";
+import { RoomType } from "../../models/room";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { EMIT_JOIN_ROOM_ACTION_CREATOR } from "../../store/actions";
@@ -42,29 +44,41 @@ const useStyles = makeStyles((theme: Theme) =>
       right: 0,
       height: "100vh",
       width: "25%",
-      padding: "1rem",
+      padding: "0.75rem",
       backgroundColor: "#F9FCFF",
       boxShadow: "-4px 4px 8px rgba(0, 0, 0, 0.1)",
+      overflow: "scroll",
     },
     list: {
       paddingTop: "0px",
     },
     listItem: {
-      paddingLeft: "0px",
+      paddingLeft: "10px",
       borderBottom: "1px solid #DEE0E2",
       color: "#9C9C9C",
     },
     listTitle: {
-      maxWidth: "70%",
+      overflow: "ellipsis",
     },
     listRight: {
-      float: "right",
       display: "contents",
+      overflow: "hidden",
     },
     listCount: {
-      textAlign: "right",
+      textAlign: "left",
+      flex: "none",
+      [theme.breakpoints.up('sm')]: {
+        textAlign: "right",
+        flex: "1 1 auto",
+      },
       marginRight: "5px",
+      marginTop: "auto",
+      marginBottom: "auto",
     },
+    listCountIcon: {
+      marginTop: "auto",
+      marginBottom: "auto",
+    }
   })
 );
 
@@ -82,7 +96,7 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
       inline: "center",
     });
 
-    window.scrollBy(rightBar!.current!.getBoundingClientRect().width/2, 0);
+    window.scrollBy(rightBar!.current!.getBoundingClientRect().width / 2, 0);
 
     if (!checked) {
       setChecked(true);
@@ -94,7 +108,7 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
       <MapInteractionCSS
         defaultValue={{
           scale: 1.25,
-          translation: {x: 0, y: 0}
+          translation: { x: 0, y: 0 },
         }}
       >
         <MapSVG
@@ -120,17 +134,20 @@ const Map: FC<MapProps> = ({ handleBuildingSelect, roomList }) => {
                     handleBuildingSelect(building.id);
                   }}
                 >
-                  <ListItemText
-                    primary={building.name}
-                    className={classes.listTitle}
-                  />
-                  <div className={classes.listRight}>
-                    <ListItemText
-                      primary={building.userCount}
-                      className={classes.listCount}
-                    />
-                    <PeopleAltIcon />
-                  </div>
+                  <Grid container spacing={0}>
+                    <Grid item xs={12} sm={7} md={9} className={classes.listTitle}>
+                      <ListItemText
+                        primary={building.name}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={5} md={3} className={classes.listRight}>
+                      <ListItemText
+                        primary={building.userCount}
+                        className={classes.listCount}
+                      />
+                      <PeopleAltIcon className={classes.listCountIcon}/>
+                    </Grid>
+                  </Grid>
                 </ListItem>
               </React.Fragment>
             ))
